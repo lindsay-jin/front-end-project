@@ -2,18 +2,18 @@
 dark blue: #384167
 */
 
-/* .view {
+.view-search {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-} */
-
-.view {
-  min-height: 100vh;
-  margin-top: 30%;
 }
 
-.container {
+.view-landing {
+  min-height: 100vh;
+  padding-top: 30%;
+}
+
+.landing-container {
   display: flex;
   flex-direction: column;
   align-items: center;
