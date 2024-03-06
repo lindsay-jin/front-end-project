@@ -1,20 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AJAX Project</title>
-  <link rel="icon" href="images/favicon.ico">
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-  <header>
-  </header>
-  <main>
-  </main>
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AJAX Project</title>
+    <link rel="icon" href="images/favicon.ico" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chango&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <!--landing page-->
+    <div class="view">
+      <div class="container">
+        <h1 class="landing-h1">Welcome to</h1>
+        <h1 class="landing-h1-2">StudySpotFinder!</h1>
+        <h2>Search For Your Ideal<br />Study Environment</h2>
+        <button class="start-search-button">START SEARCHING</button>
+        <button class="login-button">I HAVE AN ACCOUNT</button>
+      </div>
+    </div>
+    <!--search page-->
+    <div class="view hidden">
+      <header>
+        <div class="name-container container">
+          <h1 class="search-h1">StudySpotFinder</h1>
+        </div>
+      </header>
+      <main>
+        <div class="form-container">
+          <form class="container" action="">
+            <!--first row-->
+            <div class="row">
+              <input
+                class="location-input"
+                type="text"
+                name="location"
+                placeholder="Search by city, state or zip code" />
+            </div>
+            <!--option row-->
+            <div class="option-row row">
+              <div class="item">
+                <input
+                  class="keyword-input"
+                  type="text"
+                  name="keyword"
+                  placeholder="Coffee... Library..." />
+              </div>
+              <div class="item">
+                <label class="open-label" for="open">Open Now</label>
+                <select class="open-select" name="open" id="open">
+                  <option value="">YES</option>
+                  <option value="">NO</option>
+                </select>
+              </div>
+              <div class="item">
+                <label for="show">Show</label>
+                <input
+                  class="show-input"
+                  type="text"
+                  placeholder="Up to 50 listings" />
+              </div>
+              <div class="item">
+                <label for="sort">Sort by</label>
+                <select name="sort" id="sort">
+                  <option value="">Relevance(default)</option>
+                  <option value="">Rating</option>
+                  <option value="">Distance</option>
+                  <option value="">Popularity</option>
+                </select>
+              </div>
+            </div>
+            <!--button row-->
+            <div class="button-div row">
+              <button class="reset-button" type="submit">RESET</button>
+              <button class="submit-button" type="submit">SEARCH</button>
+            </div>
+          </form>
+        </div>
+      </main>
+
+      <footer>
+        <div class="bottom-nav-container container">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <i class="fa-solid fa-heart"></i>
+          <i class="fa-solid fa-user"></i>
+        </div>
+      </footer>
+    </div>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+  </body>
 </html>

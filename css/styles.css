@@ -1,0 +1,83 @@
+/* .chango-regular {
+  font-family: "Chango", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+} */
+
+.hidden {
+  display: none;
+}
+
+body {
+  background-color: #9baadb;
+  color: #384167;
+  font-family: Chango, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.landing-h1-2 {
+  color: white;
+  margin-top: 5px;
+}
+
+.start-search-button,
+.login-button {
+  border: none;
+  background-color: white;
+  border-radius: 20px;
+  width: 200px;
+  height: 40px;
+  color: #384167;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.name-container {
+  background-color: #9baadb;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.search-h1 {
+  color: white;
+  padding: 12px 0;
+  margin: 0;
+}
+
+input,
+select {
+  border: 1px solid #384167;
+  border-radius: 5px;
+  height: 30px;
+}
+
+.reset-button,
+.submit-button {
+  background-color: #384167;
+  color: white;
+  font-weight: bold;
+}
+
+i {
+  color: white;
+  font-size: 24px;
+}
+
+@media screen and (min-width: 768px) {
+  .landing-h1,
+  .landing-h1-2 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .start-search-button,
+  .login-button {
+    width: 250px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+}
