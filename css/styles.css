@@ -21,6 +21,10 @@
   margin-top: 5px;
 }
 
+button {
+  cursor: pointer;
+}
+
 .start-search-button,
 .login-button {
   border: none;

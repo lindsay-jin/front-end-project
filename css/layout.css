@@ -20,6 +20,15 @@ dark blue: #384167
   text-align: center;
 }
 
+.open-row,
+.sort-row {
+  text-align: right;
+}
+
+select {
+  width: 100%;
+}
+
 .start-search-button {
   margin-top: 50px;
   margin-bottom: 30px;
@@ -83,11 +92,25 @@ footer {
 }
 
 @media screen and (min-width: 768px) {
+  .view-landing {
+    min-height: 100vh;
+    padding-top: 5%;
+  }
+
   .column-fourth {
     width: 24%;
   }
 
   .option-row > div {
     display: flex;
+  }
+
+  .button-div {
+    display: flex;
+    justify-content: end;
+  }
+
+  .reset-button {
+    margin-right: 20px;
   }
 }
