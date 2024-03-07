@@ -48,28 +48,28 @@
             </div>
             <!--option row-->
             <div class="option-row row">
-              <div class="item">
+              <div class="column-half column-fourth">
                 <input
                   class="keyword-input"
                   type="text"
                   name="keyword"
                   placeholder="Coffee... Library..." />
               </div>
-              <div class="item">
-                <label class="open-label" for="open">Open Now</label>
-                <select class="open-select" name="open" id="open">
-                  <option value="">YES</option>
-                  <option value="">NO</option>
+              <div class="column-half column-fourth">
+                <select name="open" id="open">
+                  <option value="open" disabled selected>Open Now</option>
+                  <option value="yes">YES</option>
+                  <option value="NO">NO</option>
                 </select>
               </div>
-              <div class="item">
+              <div class="column-half column-fourth">
                 <label for="show">Show</label>
                 <input
                   class="show-input"
                   type="text"
                   placeholder="Up to 50 listings" />
               </div>
-              <div class="item">
+              <div class="column-half column-fourth">
                 <label for="sort">Sort by</label>
                 <select name="sort" id="sort">
                   <option value="">Relevance(default)</option>

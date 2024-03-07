@@ -43,21 +43,18 @@ form {
 
 label {
   display: inline;
-}
-
-.location-input {
-  height: 30px;
-  width: 100%;
+  margin-right: 5px;
 }
 
 .option-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
 }
 
-.item {
-  flex: 50%;
+.column-half {
+  width: 45%;
 }
 
 .button-div {
@@ -86,7 +83,11 @@ footer {
 }
 
 @media screen and (min-width: 768px) {
-  .item {
-    flex: 25%;
+  .column-fourth {
+    width: 24%;
+  }
+
+  .option-row > div {
+    display: flex;
   }
 }

@@ -50,6 +50,12 @@ select {
   border: 1px solid #384167;
   border-radius: 5px;
   height: 30px;
+  margin-bottom: 10px;
+}
+
+.location-input {
+  margin-bottom: 3px;
+  width: 100%;
 }
 
 .reset-button,
