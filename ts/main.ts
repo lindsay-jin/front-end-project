@@ -13,16 +13,15 @@ const $loginButton = document.querySelector('.login-button');
 //search page
 const $form = document.querySelector('form') as HTMLFormElement;
 const $location = document.querySelector('.location-input') as HTMLInputElement;
-let locationValue = $location.value;
+//const locationValue = $location.value;
 const $keyword = document.querySelector('.keyword-input') as HTMLInputElement;
-const keywordValue = $keyword.value;
+//const keywordValue = $keyword.value;
 const $open = document.querySelector('#open') as HTMLFormElement;
-const openValue = $open.value;
+//const openValue = $open.value;
 const $show = document.querySelector('.show-input') as HTMLInputElement;
-//????? why can't I assign showValue as a number?
-const showValue= $show.value;
+//const showValue = Number($show.value);
 const $sort = document.querySelector('#sort') as HTMLFormElement;
-const sortValue = $sort.value;
+//const sortValue = $sort.value;
 const $resetButton = document.querySelector('.reset-button');
 const $submitButton = document.querySelector('.submit-button')
 
@@ -45,8 +44,20 @@ $resetButton?.addEventListener('click', (event: Event)=>{
 })
 
 //submit **************************************
-$submitButton?.addEventListener('click', (event: Event) => {
+$form?.addEventListener('submit', (event: Event) => {
   event?.preventDefault();
+
+  // let info = new FormData(event.target as HTMLFormElement)
+  // console.log(event.target)
+  // console.log(info)
+  // console.log([...info.entries()]);
+  // const infoEntries = Object.fromEntries(info.entries());
+
+  const locationValue = $location.value;
+  const keywordValue = $keyword.value;
+  const openValue = $open.value;
+  const showValue = Number($show.value);
+  const sortValue = $sort.value;
 
   let obj: Obj = {
     location: locationValue ? locationValue : '',
@@ -55,7 +66,6 @@ $submitButton?.addEventListener('click', (event: Event) => {
     show: showValue ? showValue : 10,
     sortBy: sortValue ? sortValue : 'relevance',
   }
-  console.log(locationValue)
 
   data.nextEntryId++;
   data.entries.unshift(obj);
@@ -71,7 +81,7 @@ $submitButton?.addEventListener('click', (event: Event) => {
   async function fetchInfo() {
     try {
       const response = await fetch(
-        'https://api.foursquare.com/v3/places/search?query=${keywordValue}',
+        `https://api.foursquare.com/v3/places/search?query=${keywordValue}&near=${locationValue}&open_now=${openValue}&sort=${sortValue}&limit=${showValue}`,
         options
       );
       const data = await response.json();
@@ -96,8 +106,6 @@ $submitButton?.addEventListener('click', (event: Event) => {
 });
 
 function renderEntry(entry: Obj): HTMLElement {
-  // const $listing = document.createElement('div');
-  // $listing.className = 'listing';
   const $listingContainer = document.createElement('div');
   $listingContainer.className = 'listing-container';
   const $listingImgContainer = document.createElement('div');

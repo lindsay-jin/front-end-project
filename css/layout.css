@@ -80,7 +80,43 @@ label {
 
 .listing-container {
   display: flex;
+  background-color: white;
+  width: 100%;
+  height: 150px;
 }
+
+.listing-img-container {
+  width: 40%;
+}
+
+.listing-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.right-container {
+  width: 60%;
+  height: 100%;
+  background-color: white;
+}
+
+.heart-container {
+  display: flex;
+  justify-content: end;
+  padding-top: 7px;
+  padding-right: 7px;
+}
+
+.info-container {
+  padding-left: 5px;
+}
+
+.info-container h3 {
+  margin: 5px 0;
+}
+
+/* footer */
 
 .button-div {
   display: flex;
