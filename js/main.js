@@ -25,9 +25,48 @@ $resetButton?.addEventListener('click', (event) => {
     event.preventDefault();
     $form.reset();
 });
+const options = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+        Authorization: 'fsq3fiDFAJR1ZjTM79TGzTzCwyT25vUL31rgJOe5JqZ0sAY=',
+    },
+};
+async function fetchPhotoId(id) {
+    const response = await fetch(`https://api.foursquare.com/v3/places/${id}/photos`, options);
+    const data = await response.json();
+    console.log(data); // an array of objects because there are multiple photos
+    const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
+    console.log(firstPhotoUrl);
+    return firstPhotoUrl;
+}
+;
+async function fetchInfo({ keyword, location, open, show, sortBy }) {
+    try {
+        console.log('open', typeof open);
+        const response = await fetch(`https://api.foursquare.com/v3/places/search?query=${keyword}&near=${location}&open_now=${open}&sort=${sortBy}&limit=${show}`, options);
+        const data = await response.json();
+        console.log(data);
+        if (!data) {
+            throw new Error('Nothing found within the search parameter.');
+        }
+        data.results.forEach(async (result) => {
+            const photo = await fetchPhotoId(result.fsq_id); // the photo for each place
+            console.log(photo);
+            const entryElement = renderEntry(result, photo); //the rendered DOM tree
+            $listing.prepend(entryElement);
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
 //submit **************************************
 $form?.addEventListener('submit', (event) => {
     event?.preventDefault();
+    while ($listing.firstChild) {
+        $listing.removeChild($listing.firstChild);
+    }
     const locationValue = $location.value;
     const keywordValue = $keyword.value;
     const openValue = $open.value;
@@ -36,75 +75,61 @@ $form?.addEventListener('submit', (event) => {
     let obj = {
         location: locationValue ? locationValue : '',
         keyword: keywordValue ? keywordValue : '',
-        open: openValue ? openValue : '',
+        open: openValue ? Boolean(openValue) : true,
         show: showValue ? showValue : 10,
         sortBy: sortValue ? sortValue : 'relevance',
     };
+    fetchInfo(obj);
     data.nextEntryId++;
     data.entries.unshift(obj);
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: 'fsq3fiDFAJR1ZjTM79TGzTzCwyT25vUL31rgJOe5JqZ0sAY=',
-        },
-    };
-    async function fetchInfo() {
-        try {
-            const response = await fetch(`https://api.foursquare.com/v3/places/search?query=${keywordValue}&near=${locationValue}&open_now=${openValue}&sort=${sortValue}&limit=${showValue}`, options);
-            const data = await response.json();
-            console.log(data);
-            if (!data) {
-                throw new Error('Nothing found within the search parameter.');
-            }
-            ;
-            if (data !== undefined) {
-                $listing.classList.add('white');
-            }
-            ;
-            data.results.forEach((result) => {
-                const entryElement = renderEntry(result); //the rendered DOM tree
-                $listing.prepend(entryElement);
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
 });
 //render entry**************************
-function renderEntry(result) {
+function renderEntry(result, photo) {
     const $listingContainer = document.createElement('div');
     $listingContainer.className = 'listing-container';
     const $listingImgContainer = document.createElement('div');
     $listingImgContainer.className = 'listing-img-container';
     const $listingImage = document.createElement('img');
     $listingImage.className = 'listing-image';
+    $listingImage.setAttribute('src', photo);
+    const $rightContainer = document.createElement('div');
+    $rightContainer.className = 'right-container';
     const $heartContainer = document.createElement('div');
     $heartContainer.className = 'heart-container';
     const $iHeart = document.createElement('i');
     $iHeart.className = 'fa-regular fa-heart';
     const $infoContainer = document.createElement('div');
     $infoContainer.className = 'info-container';
+    const $nameContainer = document.createElement('div');
+    const $addressContainer = document.createElement('div');
     const $listingName = document.createElement('h3');
     $listingName.className = 'listing-name';
-    $listingName.textContent = result.name;
+    $listingName.textContent = 'Name: ';
+    const $spanName = document.createElement('span');
+    $spanName.textContent = result.name;
     const $listingAddress = document.createElement('h3');
     $listingAddress.className = 'listing-address';
-    $listingAddress.textContent = result.location.formatted_address;
+    $listingAddress.textContent = 'Address: ';
+    const $spanAddress = document.createElement('span');
+    $spanAddress.textContent = result.location.formatted_address;
     $listingContainer.appendChild($listingImgContainer);
-    $listingContainer.appendChild($heartContainer);
-    $listingContainer.appendChild($infoContainer);
+    $listingContainer.appendChild($rightContainer);
+    $rightContainer.appendChild($heartContainer);
+    $rightContainer.appendChild($infoContainer);
     $listingImgContainer.appendChild($listingImage);
     $heartContainer.appendChild($iHeart);
-    $infoContainer.appendChild($listingName);
-    $infoContainer.appendChild($listingAddress);
+    $infoContainer.appendChild($nameContainer);
+    $infoContainer.appendChild($addressContainer);
+    $nameContainer.appendChild($listingName);
+    $nameContainer.appendChild($spanName);
+    $addressContainer.appendChild($listingAddress);
+    $addressContainer.appendChild($spanAddress);
     console.log(result);
     return $listingContainer;
 }
-document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 0; i < data.entries.length; i++) {
-        const currentEntry = renderEntry(data.entries[i]);
-        $listing?.appendChild(currentEntry);
-    }
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//   for (let i = 0; i < data.entries.length; i++) {
+//     const currentEntry = renderEntry(data.entries[i], );
+//     $listing?.appendChild(currentEntry);
+//   }
+// });

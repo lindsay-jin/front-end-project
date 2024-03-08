@@ -14,12 +14,12 @@ let data: Data = {
   nextEntryId: 1,
 };
 
-// window.addEventListener('beforeunload', () => {
-//   const dataJSON = JSON.stringify(data);
-//   localStorage.setItem('data-model', dataJSON);
-// });
+window.addEventListener('beforeunload', () => {
+  const dataJSON = JSON.stringify(data);
+  localStorage.setItem('data-model', dataJSON);
+});
 
-// const storedData = localStorage.getItem('data-model');
-// if (storedData) {
-//   data = JSON.parse(storedData);
-// }
+const storedData = localStorage.getItem('data-model');
+if (storedData) {
+  data = JSON.parse(storedData);
+}
