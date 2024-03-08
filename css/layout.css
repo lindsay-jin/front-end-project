@@ -1,6 +1,9 @@
 /* colors:
 dark blue: #384167
 */
+body {
+  background-color: #f0f0f0;
+}
 
 .view-search {
   min-height: 100vh;
@@ -64,6 +67,19 @@ label {
 
 .column-half {
   width: 45%;
+}
+
+/* listing */
+.white {
+  background-color: white;
+}
+
+.listing {
+  margin: 10px 1rem;
+}
+
+.listing-container {
+  display: flex;
 }
 
 .button-div {

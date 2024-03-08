@@ -69,7 +69,8 @@ select {
   font-weight: bold;
 }
 
-i {
+/* footer */
+footer i {
   color: white;
   font-size: 24px;
 }
