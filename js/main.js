@@ -5,15 +5,10 @@ const $loginButton = document.querySelector('.login-button');
 //search page
 const $form = document.querySelector('form');
 const $location = document.querySelector('.location-input');
-//const locationValue = $location.value;
 const $keyword = document.querySelector('.keyword-input');
-//const keywordValue = $keyword.value;
 const $open = document.querySelector('#open');
-//const openValue = $open.value;
 const $show = document.querySelector('.show-input');
-//const showValue = Number($show.value);
 const $sort = document.querySelector('#sort');
-//const sortValue = $sort.value;
 const $resetButton = document.querySelector('.reset-button');
 const $submitButton = document.querySelector('.submit-button');
 //listing
@@ -33,11 +28,6 @@ $resetButton?.addEventListener('click', (event) => {
 //submit **************************************
 $form?.addEventListener('submit', (event) => {
     event?.preventDefault();
-    // let info = new FormData(event.target as HTMLFormElement)
-    // console.log(event.target)
-    // console.log(info)
-    // console.log([...info.entries()]);
-    // const infoEntries = Object.fromEntries(info.entries());
     const locationValue = $location.value;
     const keywordValue = $keyword.value;
     const openValue = $open.value;
@@ -72,17 +62,18 @@ $form?.addEventListener('submit', (event) => {
                 $listing.classList.add('white');
             }
             ;
-            // $listingName.textContent = 'Name: ' + data.results[0].name;
-            // $listingAddress.textContent = 'Address: ' + data.results[0].location.formatted_address;
+            data.results.forEach((result) => {
+                const entryElement = renderEntry(result); //the rendered DOM tree
+                $listing.prepend(entryElement);
+            });
         }
         catch (error) {
             console.log(error);
         }
     }
-    fetchInfo();
-    $listing.prepend(renderEntry(obj));
 });
-function renderEntry(entry) {
+//render entry**************************
+function renderEntry(result) {
     const $listingContainer = document.createElement('div');
     $listingContainer.className = 'listing-container';
     const $listingImgContainer = document.createElement('div');
@@ -97,10 +88,10 @@ function renderEntry(entry) {
     $infoContainer.className = 'info-container';
     const $listingName = document.createElement('h3');
     $listingName.className = 'listing-name';
-    //$listingName.textContent = ;
+    $listingName.textContent = result.name;
     const $listingAddress = document.createElement('h3');
     $listingAddress.className = 'listing-address';
-    //$listingAddress.textContent = ;
+    $listingAddress.textContent = result.location.formatted_address;
     $listingContainer.appendChild($listingImgContainer);
     $listingContainer.appendChild($heartContainer);
     $listingContainer.appendChild($infoContainer);
@@ -108,7 +99,7 @@ function renderEntry(entry) {
     $heartContainer.appendChild($iHeart);
     $infoContainer.appendChild($listingName);
     $infoContainer.appendChild($listingAddress);
-    console.log(entry);
+    console.log(result);
     return $listingContainer;
 }
 document.addEventListener('DOMContentLoaded', () => {

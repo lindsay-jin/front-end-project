@@ -110,10 +110,17 @@ label {
 
 .info-container {
   padding-left: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-container > div {
+  margin: 5px 0;
 }
 
 .info-container h3 {
   margin: 5px 0;
+  display: inline;
 }
 
 /* footer */
@@ -164,5 +171,15 @@ footer {
 
   .reset-button {
     margin-right: 20px;
+  }
+
+  .listing {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .listing-container {
+    width: 30%;
   }
 }

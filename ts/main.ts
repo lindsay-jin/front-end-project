@@ -1,7 +1,7 @@
 interface Obj {
   location?: string;
   keyword?: string;
-  open?: boolean;
+  open?: string;
   show?: number;
   sortBy?: string;
 }
@@ -13,15 +13,10 @@ const $loginButton = document.querySelector('.login-button');
 //search page
 const $form = document.querySelector('form') as HTMLFormElement;
 const $location = document.querySelector('.location-input') as HTMLInputElement;
-//const locationValue = $location.value;
 const $keyword = document.querySelector('.keyword-input') as HTMLInputElement;
-//const keywordValue = $keyword.value;
 const $open = document.querySelector('#open') as HTMLFormElement;
-//const openValue = $open.value;
 const $show = document.querySelector('.show-input') as HTMLInputElement;
-//const showValue = Number($show.value);
 const $sort = document.querySelector('#sort') as HTMLFormElement;
-//const sortValue = $sort.value;
 const $resetButton = document.querySelector('.reset-button');
 const $submitButton = document.querySelector('.submit-button')
 
@@ -46,12 +41,6 @@ $resetButton?.addEventListener('click', (event: Event)=>{
 //submit **************************************
 $form?.addEventListener('submit', (event: Event) => {
   event?.preventDefault();
-
-  // let info = new FormData(event.target as HTMLFormElement)
-  // console.log(event.target)
-  // console.log(info)
-  // console.log([...info.entries()]);
-  // const infoEntries = Object.fromEntries(info.entries());
 
   const locationValue = $location.value;
   const keywordValue = $keyword.value;
@@ -94,18 +83,19 @@ $form?.addEventListener('submit', (event: Event) => {
         $listing.classList.add('white')
       };
 
-      // $listingName.textContent = 'Name: ' + data.results[0].name;
-      // $listingAddress.textContent = 'Address: ' + data.results[0].location.formatted_address;
+      data.results.forEach((result: any) => {
+        const entryElement = renderEntry(result); //the rendered DOM tree
+        $listing.prepend(entryElement);
+      });
+
     } catch (error) {
       console.log(error);
     }
   }
-
-  fetchInfo();
-  $listing.prepend(renderEntry(obj));
 });
 
-function renderEntry(entry: Obj): HTMLElement {
+//render entry**************************
+function renderEntry(result: any): HTMLElement {
   const $listingContainer = document.createElement('div');
   $listingContainer.className = 'listing-container';
   const $listingImgContainer = document.createElement('div');
@@ -120,10 +110,10 @@ function renderEntry(entry: Obj): HTMLElement {
   $infoContainer.className = 'info-container';
   const $listingName = document.createElement('h3');
   $listingName.className = 'listing-name'
-  //$listingName.textContent = ;
+  $listingName.textContent = result.name;
   const $listingAddress = document.createElement('h3');
   $listingAddress.className = 'listing-address';
-  //$listingAddress.textContent = ;
+  $listingAddress.textContent = result.location.formatted_address;
 
   $listingContainer.appendChild($listingImgContainer);
   $listingContainer.appendChild($heartContainer);
@@ -133,7 +123,7 @@ function renderEntry(entry: Obj): HTMLElement {
   $infoContainer.appendChild($listingName);
   $infoContainer.appendChild($listingAddress);
 
-  console.log(entry)
+  console.log(result)
   return $listingContainer;
 }
 
