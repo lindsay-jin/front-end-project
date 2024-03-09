@@ -42,14 +42,23 @@ const options = {
 };
 
 async function fetchPhotoId(id: string): Promise<string> {
-  const response = await fetch(
-    `https://api.foursquare.com/v3/places/${id}/photos`,
-    options,
-  );
-  const data = await response.json();
+  try {
+    const response = await fetch(
+      `https://api.foursquare.com/v3/places/${id}/photos`,
+      options,
+    );
+    const data = await response.json();
 
-  const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
-  return firstPhotoUrl;
+    if (data && data.length > 0) {
+      const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
+      return firstPhotoUrl;
+    } else {
+      throw new Error('No photos available.');
+    }
+  } catch (error) {
+    console.log('Failed to fetch photo ID:', error);
+    throw error;
+  }
 }
 
 async function fetchInfo({
@@ -76,7 +85,7 @@ async function fetchInfo({
       $listing.prepend(entryElement);
     });
   } catch (error) {
-    console.log(error);
+    console.log('Failed to fetch obj:', error);
   }
 }
 

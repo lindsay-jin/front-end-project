@@ -29,13 +29,22 @@ const options = {
   },
 };
 async function fetchPhotoId(id) {
-  const response = await fetch(
-    `https://api.foursquare.com/v3/places/${id}/photos`,
-    options,
-  );
-  const data = await response.json();
-  const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
-  return firstPhotoUrl;
+  try {
+    const response = await fetch(
+      `https://api.foursquare.com/v3/places/${id}/photos`,
+      options,
+    );
+    const data = await response.json();
+    if (data && data.length > 0) {
+      const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
+      return firstPhotoUrl;
+    } else {
+      throw new Error('No photos available.');
+    }
+  } catch (error) {
+    console.log('Failed to fetch photo ID:', error);
+    throw error;
+  }
 }
 async function fetchInfo({ keyword, location, open, show, sortBy }) {
   try {
@@ -53,7 +62,7 @@ async function fetchInfo({ keyword, location, open, show, sortBy }) {
       $listing.prepend(entryElement);
     });
   } catch (error) {
-    console.log(error);
+    console.log('Failed to fetch obj:', error);
   }
 }
 // submit **************************************
