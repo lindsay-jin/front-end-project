@@ -6,11 +6,11 @@ interface Obj {
   sortBy?: string;
 }
 
-//landing page
+// landing page
 const $startSearchButton = document.querySelector('.start-search-button');
-const $loginButton = document.querySelector('.login-button');
+// const $loginButton = document.querySelector('.login-button');
 
-//search page
+// search page
 const $form = document.querySelector('form') as HTMLFormElement;
 const $location = document.querySelector('.location-input') as HTMLInputElement;
 const $keyword = document.querySelector('.keyword-input') as HTMLInputElement;
@@ -18,17 +18,12 @@ const $open = document.querySelector('#open') as HTMLFormElement;
 const $show = document.querySelector('.show-input') as HTMLInputElement;
 const $sort = document.querySelector('#sort') as HTMLFormElement;
 const $resetButton = document.querySelector('.reset-button');
-const $submitButton = document.querySelector('.submit-button');
+// const $submitButton = document.querySelector('.submit-button');
 
-//listing
+// listing
 const $viewLanding = document.querySelector('.view-landing');
 const $viewSearch = document.querySelector('.view-search');
 const $listing = document.querySelector('.listing') as HTMLElement;
-
-const $listingName = document.querySelector('.listing-name') as HTMLElement;
-const $listingAddress = document.querySelector(
-  '.listing-address',
-) as HTMLElement;
 
 $startSearchButton?.addEventListener('click', () => {
   $viewLanding?.classList.add('hidden');
@@ -48,18 +43,25 @@ const options = {
   },
 };
 
-async function fetchPhotoId(id: string) {
-  const response = await fetch(`https://api.foursquare.com/v3/places/${id}/photos`, options);
+async function fetchPhotoId(id: string): Promise<string> {
+  const response = await fetch(
+    `https://api.foursquare.com/v3/places/${id}/photos`,
+    options,
+  );
   const data = await response.json();
-  console.log(data);// an array of objects because there are multiple photos
+  console.log('data:', data); // an array of objects because there are multiple photos
 
   const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
-  console.log(firstPhotoUrl)
   return firstPhotoUrl;
-};
+}
 
-
-async function fetchInfo({ keyword, location, open, show, sortBy}: Obj) {
+async function fetchInfo({
+  keyword,
+  location,
+  open,
+  show,
+  sortBy,
+}: Obj): Promise<void> {
   try {
     console.log('open', typeof open);
     const response = await fetch(
@@ -76,7 +78,7 @@ async function fetchInfo({ keyword, location, open, show, sortBy}: Obj) {
     data.results.forEach(async (result: any) => {
       const photo = await fetchPhotoId(result.fsq_id); // the photo for each place
       console.log(photo);
-      const entryElement = renderEntry(result, photo); //the rendered DOM tree
+      const entryElement = renderEntry(result, photo); // the rendered DOM tree
       $listing.prepend(entryElement);
     });
   } catch (error) {
@@ -84,7 +86,7 @@ async function fetchInfo({ keyword, location, open, show, sortBy}: Obj) {
   }
 }
 
-//submit **************************************
+// submit **************************************
 $form?.addEventListener('submit', (event: Event) => {
   event?.preventDefault();
 
@@ -98,22 +100,20 @@ $form?.addEventListener('submit', (event: Event) => {
   const showValue = Number($show.value);
   const sortValue = $sort.value;
 
-  let obj: Obj = {
-    location: locationValue ? locationValue : '',
-    keyword: keywordValue ? keywordValue : '',
+  const obj: Obj = {
+    location: locationValue || '',
+    keyword: keywordValue || '',
     open: openValue ? Boolean(openValue) : true,
-    show: showValue ? showValue : 10,
-    sortBy: sortValue ? sortValue : 'relevance',
+    show: showValue || 10,
+    sortBy: sortValue || 'relevance',
   };
 
   fetchInfo(obj);
   data.nextEntryId++;
   data.entries.unshift(obj);
-
-
 });
 
-//render entry**************************
+// render entry**************************
 function renderEntry(result: any, photo: string): HTMLElement {
   const $listingContainer = document.createElement('div');
   $listingContainer.className = 'listing-container';
@@ -138,18 +138,18 @@ function renderEntry(result: any, photo: string): HTMLElement {
   $infoContainer.className = 'info-container';
 
   const $nameContainer = document.createElement('div');
-  const $addressContainer = document.createElement('div')
+  const $addressContainer = document.createElement('div');
 
   const $listingName = document.createElement('h3');
   $listingName.className = 'listing-name';
-  $listingName.textContent = 'Name: '
+  $listingName.textContent = 'Name: ';
 
   const $spanName = document.createElement('span');
-  $spanName.textContent = result.name
+  $spanName.textContent = result.name;
 
   const $listingAddress = document.createElement('h3');
   $listingAddress.className = 'listing-address';
-  $listingAddress.textContent = 'Address: '
+  $listingAddress.textContent = 'Address: ';
 
   const $spanAddress = document.createElement('span');
   $spanAddress.textContent = result.location.formatted_address;
@@ -171,13 +171,6 @@ function renderEntry(result: any, photo: string): HTMLElement {
   $addressContainer.appendChild($listingAddress);
   $addressContainer.appendChild($spanAddress);
 
-  console.log(result);
+  console.log('result:', result);
   return $listingContainer;
 }
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   for (let i = 0; i < data.entries.length; i++) {
-//     const currentEntry = renderEntry(data.entries[i], );
-//     $listing?.appendChild(currentEntry);
-//   }
-// });

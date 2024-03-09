@@ -72,6 +72,8 @@ label {
 /* listing */
 .listing {
   margin: 10px 1rem;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .listing-container {
