@@ -1,8 +1,7 @@
 'use strict';
-//landing page
+// landing page
 const $startSearchButton = document.querySelector('.start-search-button');
-//const $loginButton = document.querySelector('.login-button');
-//search page
+// search page
 const $form = document.querySelector('form');
 const $location = document.querySelector('.location-input');
 const $keyword = document.querySelector('.keyword-input');
@@ -10,8 +9,7 @@ const $open = document.querySelector('#open');
 const $show = document.querySelector('.show-input');
 const $sort = document.querySelector('#sort');
 const $resetButton = document.querySelector('.reset-button');
-//const $submitButton = document.querySelector('.submit-button');
-//listing
+// listing
 const $viewLanding = document.querySelector('.view-landing');
 const $viewSearch = document.querySelector('.view-search');
 const $listing = document.querySelector('.listing');
@@ -36,33 +34,29 @@ async function fetchPhotoId(id) {
     options,
   );
   const data = await response.json();
-  console.log('data:', data); // an array of objects because there are multiple photos
   const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
   return firstPhotoUrl;
 }
 async function fetchInfo({ keyword, location, open, show, sortBy }) {
   try {
-    console.log('open', typeof open);
     const response = await fetch(
       `https://api.foursquare.com/v3/places/search?query=${keyword}&near=${location}&open_now=${open}&sort=${sortBy}&limit=${show}`,
       options,
     );
     const data = await response.json();
-    console.log(data);
     if (!data) {
       throw new Error('Nothing found within the search parameter.');
     }
     data.results.forEach(async (result) => {
       const photo = await fetchPhotoId(result.fsq_id); // the photo for each place
-      console.log(photo);
-      const entryElement = renderEntry(result, photo); //the rendered DOM tree
+      const entryElement = renderEntry(result, photo); // the rendered DOM tree
       $listing.prepend(entryElement);
     });
   } catch (error) {
     console.log(error);
   }
 }
-//submit **************************************
+// submit **************************************
 $form?.addEventListener('submit', (event) => {
   event?.preventDefault();
   while ($listing.firstChild) {
@@ -73,18 +67,16 @@ $form?.addEventListener('submit', (event) => {
   const openValue = $open.value;
   const showValue = Number($show.value);
   const sortValue = $sort.value;
-  let obj = {
-    location: locationValue ? locationValue : '',
-    keyword: keywordValue ? keywordValue : '',
+  const obj = {
+    location: locationValue || '',
+    keyword: keywordValue || '',
     open: openValue ? Boolean(openValue) : true,
-    show: showValue ? showValue : 10,
-    sortBy: sortValue ? sortValue : 'relevance',
+    show: showValue || 10,
+    sortBy: sortValue || 'relevance',
   };
   fetchInfo(obj);
-  data.nextEntryId++;
-  data.entries.unshift(obj);
 });
-//render entry**************************
+// render entry**************************
 function renderEntry(result, photo) {
   const $listingContainer = document.createElement('div');
   $listingContainer.className = 'listing-container';
@@ -125,6 +117,5 @@ function renderEntry(result, photo) {
   $nameContainer.appendChild($spanName);
   $addressContainer.appendChild($listingAddress);
   $addressContainer.appendChild($spanAddress);
-  console.log('result:', result);
   return $listingContainer;
 }

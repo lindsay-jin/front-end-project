@@ -175,10 +175,15 @@ footer {
   .listing {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   .listing-container {
-    width: 30%;
+    width: calc(33.333% - 20px);
+    margin-right: 25px;
+  }
+
+  .listing-container:nth-child(3n) {
+    margin-right: 0;
   }
 }

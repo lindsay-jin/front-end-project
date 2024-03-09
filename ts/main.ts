@@ -8,7 +8,6 @@ interface Obj {
 
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
-// const $loginButton = document.querySelector('.login-button');
 
 // search page
 const $form = document.querySelector('form') as HTMLFormElement;
@@ -18,7 +17,6 @@ const $open = document.querySelector('#open') as HTMLFormElement;
 const $show = document.querySelector('.show-input') as HTMLInputElement;
 const $sort = document.querySelector('#sort') as HTMLFormElement;
 const $resetButton = document.querySelector('.reset-button');
-// const $submitButton = document.querySelector('.submit-button');
 
 // listing
 const $viewLanding = document.querySelector('.view-landing');
@@ -49,7 +47,6 @@ async function fetchPhotoId(id: string): Promise<string> {
     options,
   );
   const data = await response.json();
-  console.log('data:', data); // an array of objects because there are multiple photos
 
   const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
   return firstPhotoUrl;
@@ -63,13 +60,11 @@ async function fetchInfo({
   sortBy,
 }: Obj): Promise<void> {
   try {
-    console.log('open', typeof open);
     const response = await fetch(
       `https://api.foursquare.com/v3/places/search?query=${keyword}&near=${location}&open_now=${open}&sort=${sortBy}&limit=${show}`,
       options,
     );
     const data = await response.json();
-    console.log(data);
 
     if (!data) {
       throw new Error('Nothing found within the search parameter.');
@@ -77,7 +72,6 @@ async function fetchInfo({
 
     data.results.forEach(async (result: any) => {
       const photo = await fetchPhotoId(result.fsq_id); // the photo for each place
-      console.log(photo);
       const entryElement = renderEntry(result, photo); // the rendered DOM tree
       $listing.prepend(entryElement);
     });
@@ -109,8 +103,6 @@ $form?.addEventListener('submit', (event: Event) => {
   };
 
   fetchInfo(obj);
-  data.nextEntryId++;
-  data.entries.unshift(obj);
 });
 
 // render entry**************************
@@ -171,6 +163,5 @@ function renderEntry(result: any, photo: string): HTMLElement {
   $addressContainer.appendChild($listingAddress);
   $addressContainer.appendChild($spanAddress);
 
-  console.log('result:', result);
   return $listingContainer;
 }
