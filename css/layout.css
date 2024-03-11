@@ -1,0 +1,189 @@
+/* colors:
+dark blue: #384167
+*/
+body {
+  background-color: #f0f0f0;
+}
+
+.view-search {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-landing {
+  min-height: 100vh;
+  padding-top: 30%;
+}
+
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.open-row,
+.sort-row {
+  text-align: right;
+}
+
+select {
+  width: 100%;
+}
+
+.start-search-button {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
+header {
+  margin-bottom: 7px;
+}
+
+form {
+  margin: 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row {
+  display: flex;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+label {
+  display: inline;
+  margin-right: 5px;
+}
+
+.option-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.column-half {
+  width: 45%;
+}
+
+/* listing */
+.listing {
+  margin: 10px 1rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.listing-container {
+  display: flex;
+  background-color: white;
+  width: 100%;
+  height: 150px;
+  margin: 10px 0;
+}
+
+.listing-img-container {
+  width: 40%;
+}
+
+.listing-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.right-container {
+  width: 60%;
+  height: 100%;
+  background-color: white;
+}
+
+.heart-container {
+  display: flex;
+  justify-content: end;
+  padding-top: 7px;
+  padding-right: 7px;
+}
+
+.info-container {
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-container > div {
+  margin: 5px 0;
+}
+
+.info-container h3 {
+  margin: 5px 0;
+  display: inline;
+}
+
+/* footer */
+
+.button-div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reset-button,
+.submit-button {
+  width: 150px;
+  height: 25px;
+  border-radius: 10px;
+}
+
+footer {
+  margin-top: auto;
+  height: 50px;
+}
+
+.bottom-nav-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #9baadb;
+  height: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .view-landing {
+    min-height: 100vh;
+    padding-top: 5%;
+  }
+
+  .column-fourth {
+    width: 24%;
+  }
+
+  .option-row > div {
+    display: flex;
+  }
+
+  .button-div {
+    display: flex;
+    justify-content: end;
+  }
+
+  .reset-button {
+    margin-right: 20px;
+  }
+
+  .listing {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .listing-container {
+    width: calc(33.333% - 20px);
+    margin-right: 25px;
+  }
+
+  .listing-container:nth-child(3n) {
+    margin-right: 0;
+  }
+}
