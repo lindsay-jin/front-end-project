@@ -19,7 +19,9 @@ const $resetButton = document.querySelector('.reset-button');
 
 // pages
 const $viewLanding = document.querySelector('div[data-view="landing"]');
-const $listing = document.querySelector('.listing') as HTMLElement;
+const $listing = document.querySelector(
+  'div[data-view="listing"]',
+) as HTMLElement;
 const $header = document.querySelector(
   'header[data-view="header"]',
 ) as HTMLElement;
@@ -30,16 +32,19 @@ const $form = document.querySelector(
   'div[data-view="form"]',
 ) as HTMLFormElement;
 const $details = document.querySelector('div[data-view="details"]');
-
+// view swap
 function viewSwap(view: string): void {
+  console.log(`viewSwap called with view: ${view}`);
   if (view === 'landing') {
     $viewLanding?.classList.remove('hidden');
     $header.classList.add('hidden');
     $form.classList.add('hidden');
     $footer.classList.add('hidden');
     $details?.classList.add('hidden');
+    $listing.classList.add('hidden');
   } else if (view === 'form') {
     $form.classList.remove('hidden');
+    $listing.classList.remove('hidden');
     $viewLanding?.classList.add('hidden');
     $header.classList.remove('hidden');
     $footer.classList.remove('hidden');
@@ -50,6 +55,7 @@ function viewSwap(view: string): void {
     $footer.classList.remove('hidden');
     $viewLanding?.classList.add('hidden');
     $form.classList.add('hidden');
+    $listing.classList.add('hidden');
   }
 }
 
@@ -176,6 +182,7 @@ function renderEntry(result: any, photo: string): HTMLElement {
   $listingName.textContent = 'Name: ';
 
   const $spanName = document.createElement('span');
+  $spanName.className = 'span-name';
   $spanName.textContent = result.name;
 
   const $listingAddress = document.createElement('h3');
@@ -183,6 +190,7 @@ function renderEntry(result: any, photo: string): HTMLElement {
   $listingAddress.textContent = 'Address: ';
 
   const $spanAddress = document.createElement('span');
+  $spanAddress.className = 'span-address';
   $spanAddress.textContent = result.location.formatted_address;
 
   $listingContainer.appendChild($listingImgContainer);
@@ -204,3 +212,37 @@ function renderEntry(result: any, photo: string): HTMLElement {
 
   return $listingContainer;
 }
+
+const $detailsImage = document.querySelector('.details-image');
+const $detailsSpanName = document.querySelector(
+  '.details-span-name',
+) as HTMLElement;
+const $detailsSpanAddress = document.querySelector(
+  '.details-span-address',
+) as HTMLElement;
+
+document.addEventListener('DOMContentLoaded', () => {
+  $listing.addEventListener('click', (event) => {
+    event.preventDefault();
+    viewSwap('details');
+
+    const $eventTarget = event.target as HTMLElement;
+    if ($eventTarget && $eventTarget.tagName === 'IMG') {
+      const closestElement = $eventTarget.closest('.listing-image');
+      const detailsImgUrl = closestElement?.getAttribute('src') as string;
+      $detailsImage?.setAttribute('src', detailsImgUrl);
+
+      const closestParent = $eventTarget.closest(
+        'div[data-view="listing"]',
+      ) as HTMLElement;
+
+      const spanName = closestParent.querySelector('.span-name') as HTMLElement;
+      $detailsSpanName.textContent = spanName.textContent;
+
+      const spanAddress = closestParent.querySelector(
+        '.span-address',
+      ) as HTMLElement;
+      $detailsSpanAddress.textContent = spanAddress.textContent;
+    }
+  });
+});

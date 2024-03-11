@@ -1,5 +1,5 @@
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 div[data-view='landing'] {
@@ -15,7 +15,8 @@ div[data-view='landing'] {
   margin-top: 5px;
 }
 
-button {
+button,
+i {
   cursor: pointer;
 }
 
@@ -66,6 +67,10 @@ select {
   background-color: #384167;
   color: white;
   font-weight: bold;
+}
+
+.listing-image {
+  cursor: pointer;
 }
 
 /* footer */

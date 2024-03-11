@@ -18,25 +18,25 @@
       rel="stylesheet" />
   </head>
   <body>
-    <!--landing page-->
-    <div data-view="landing">
-      <div class="landing-container">
-        <h1 class="landing-h1">Welcome to</h1>
-        <h1 class="landing-h1-2">StudySpotFinder!</h1>
-        <h2>Search For Your Ideal<br />Study Environment</h2>
-        <button class="start-search-button">START SEARCHING</button>
-        <button class="login-button">I HAVE AN ACCOUNT</button>
-      </div>
-    </div>
-    <!--search page-->
     <div class="main-search">
-      <header data-view="header">
+      <!--landing page-->
+      <div data-view="landing">
+        <div class="landing-container">
+          <h1 class="landing-h1">Welcome to</h1>
+          <h1 class="landing-h1-2">StudySpotFinder!</h1>
+          <h2>Search For Your Ideal<br />Study Environment</h2>
+          <button class="start-search-button">START SEARCHING</button>
+          <button class="login-button">I HAVE AN ACCOUNT</button>
+        </div>
+      </div>
+      <!--search page-->
+      <header data-view="header" class="hidden">
         <div class="name-container container">
           <h1 class="search-h1">StudySpotFinder</h1>
         </div>
       </header>
       <main>
-        <div data-view="form" class="form-container">
+        <div data-view="form" class="form-container hidden">
           <form class="container" action="">
             <!--first row-->
             <div class="row">
@@ -85,36 +85,81 @@
             </div>
           </form>
         </div>
-        <!--listings-->
-        <div class="listing"></div>
+        <!--listing page-->
+        <div data-view="listing"></div>
         <!--details page-->
-        <div data-view="details">
-          <div class="details-img-container">
-            <img src="images/placeholder.png" alt="" />
+        <div data-view="details" class="hidden">
+          <div class="details-left">
+            <div class="details-img-container">
+              <img class="details-image" src="images/placeholder.png" alt="" />
+            </div>
+            <div class="icon-container">
+              <i class="fa-regular fa-heart"></i>
+            </div>
           </div>
-          <div class="icon-container">
-            <i class="fa-regular fa-heart"></i>
-          </div>
-          <div class="details-info-container">
-            <h3>Name:</h3>
-            <span></span>
-            <h3>Address:</h3>
-            <span></span>
-          </div>
-          <div class="details-extra">
-            <select name="chair" id="chair">
-              <option value="yes">YES</option>
-              <option value="no">NO</option>
-            </select>
+          <div class="details-right">
+            <div class="details-info-container">
+              <h3>Name:</h3>
+              <span class="details-span-name"></span><br />
+              <h3>Address:</h3>
+              <span class="details-span-address"></span>
+            </div>
+            <div class="details-extra">
+              <label for="chair">Comfy Chair: </label>
+              <select name="chair" id="chair" disabled>
+                <option value="selectOne">Select One</option>
+                <option value="yes">YES</option>
+                <option value="no">NO</option>
+              </select>
+              <label for="wifi">Free Wifi: </label>
+              <select name="wifi" id="wifi" disabled>
+                <option value="selectOne">Select One</option>
+                <option value="yes">YES</option>
+                <option value="no">NO</option>
+              </select>
+              <label for="temp">Temperature</label>
+              <select name="temp" id="temp" disabled>
+                <option value="selectOne">Select One</option>
+                <option value="freezing">Freezing!</option>
+                <option value="cool">Cool, bring a jacket</option>
+                <option value="perfect">Perfect</option>
+                <option value="hot">Too hot!</option>
+              </select>
+              <label for="dog">Dog Friendly?</label>
+              <select name="dog" id="dog" disabled>
+                <option value="selectOne">Select One</option>
+                <option value="yes">YES</option>
+                <option value="no">NO</option>
+              </select>
+              <label for="noise">Noise Level</label>
+              <select name="noise" id="noise" disabled>
+                <option value="selectOne">Select One</option>
+                <option value="silent">Silent</option>
+                <option value="ambient">Ambient music</option>
+                <option value="loud">Loud music + talking volume</option>
+              </select>
+              <label for="bathroom">Bathroom</label>
+              <select name="bathroom" id="bathroom" disabled>
+                <option value="selectOne">Select One</option>
+                <option value="clean">Spotless!</option>
+                <option></option>
+                <option value="ok">Clean</option>
+                <option value="dirty">Dirty</option>
+                <option value="none">Not available</option>
+              </select>
+              <div class="edit-button-container">
+                <button type="button" class="edit-button">EDIT</button>
+              </div>
+            </div>
           </div>
         </div>
       </main>
 
-      <footer data-view="footer">
+      <footer data-view="footer" class="hidden">
         <div class="bottom-nav-container container">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <i class="fa-solid fa-heart"></i>
-          <i class="fa-solid fa-user"></i>
+          <i class="fa-solid fa-magnifying-glass nav-search-icon"></i>
+          <i class="fa-solid fa-heart nav-heart-icon"></i>
+          <i class="fa-solid fa-user nav-user-icon"></i>
         </div>
       </footer>
     </div>
