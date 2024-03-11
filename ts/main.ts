@@ -10,7 +10,6 @@ interface Obj {
 const $startSearchButton = document.querySelector('.start-search-button');
 
 // search page
-const $form = document.querySelector('form') as HTMLFormElement;
 const $location = document.querySelector('.location-input') as HTMLInputElement;
 const $keyword = document.querySelector('.keyword-input') as HTMLInputElement;
 const $open = document.querySelector('#open') as HTMLFormElement;
@@ -18,14 +17,45 @@ const $show = document.querySelector('.show-input') as HTMLInputElement;
 const $sort = document.querySelector('#sort') as HTMLFormElement;
 const $resetButton = document.querySelector('.reset-button');
 
-// listing
-const $viewLanding = document.querySelector('.view-landing');
-const $viewSearch = document.querySelector('.view-search');
+// pages
+const $viewLanding = document.querySelector('div[data-view="landing"]');
 const $listing = document.querySelector('.listing') as HTMLElement;
+const $header = document.querySelector(
+  'header[data-view="header"]',
+) as HTMLElement;
+const $footer = document.querySelector(
+  'footer[data-view="footer"]',
+) as HTMLElement;
+const $form = document.querySelector(
+  'div[data-view="form"]',
+) as HTMLFormElement;
+const $details = document.querySelector('div[data-view="details"]');
 
-$startSearchButton?.addEventListener('click', () => {
-  $viewLanding?.classList.add('hidden');
-  $viewSearch?.classList.remove('hidden');
+function viewSwap(view: string): void {
+  if (view === 'landing') {
+    $viewLanding?.classList.remove('hidden');
+    $header.classList.add('hidden');
+    $form.classList.add('hidden');
+    $footer.classList.add('hidden');
+    $details?.classList.add('hidden');
+  } else if (view === 'form') {
+    $form.classList.remove('hidden');
+    $viewLanding?.classList.add('hidden');
+    $header.classList.remove('hidden');
+    $footer.classList.remove('hidden');
+    $details?.classList.add('hidden');
+  } else if (view === 'details') {
+    $details?.classList.remove('hidden');
+    $header.classList.remove('hidden');
+    $footer.classList.remove('hidden');
+    $viewLanding?.classList.add('hidden');
+    $form.classList.add('hidden');
+  }
+}
+
+$startSearchButton?.addEventListener('click', (event: Event) => {
+  event?.preventDefault();
+  viewSwap('form');
 });
 
 $resetButton?.addEventListener('click', (event: Event) => {

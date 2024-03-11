@@ -2,20 +2,43 @@
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
 // search page
-const $form = document.querySelector('form');
 const $location = document.querySelector('.location-input');
 const $keyword = document.querySelector('.keyword-input');
 const $open = document.querySelector('#open');
 const $show = document.querySelector('.show-input');
 const $sort = document.querySelector('#sort');
 const $resetButton = document.querySelector('.reset-button');
-// listing
-const $viewLanding = document.querySelector('.view-landing');
-const $viewSearch = document.querySelector('.view-search');
+// pages
+const $viewLanding = document.querySelector('div[data-view="landing"]');
 const $listing = document.querySelector('.listing');
-$startSearchButton?.addEventListener('click', () => {
-  $viewLanding?.classList.add('hidden');
-  $viewSearch?.classList.remove('hidden');
+const $header = document.querySelector('header[data-view="header"]');
+const $footer = document.querySelector('footer[data-view="footer"]');
+const $form = document.querySelector('div[data-view="form"]');
+const $details = document.querySelector('div[data-view="details"]');
+function viewSwap(view) {
+  if (view === 'landing') {
+    $viewLanding?.classList.remove('hidden');
+    $header.classList.add('hidden');
+    $form.classList.add('hidden');
+    $footer.classList.add('hidden');
+    $details?.classList.add('hidden');
+  } else if (view === 'form') {
+    $form.classList.remove('hidden');
+    $viewLanding?.classList.add('hidden');
+    $header.classList.remove('hidden');
+    $footer.classList.remove('hidden');
+    $details?.classList.add('hidden');
+  } else if (view === 'details') {
+    $details?.classList.remove('hidden');
+    $header.classList.remove('hidden');
+    $footer.classList.remove('hidden');
+    $viewLanding?.classList.add('hidden');
+    $form.classList.add('hidden');
+  }
+}
+$startSearchButton?.addEventListener('click', (event) => {
+  event?.preventDefault();
+  viewSwap('form');
 });
 $resetButton?.addEventListener('click', (event) => {
   event.preventDefault();

@@ -2,7 +2,7 @@
   display: none;
 }
 
-.view-landing {
+div[data-view='landing'] {
   background-color: #9baadb;
   color: #384167;
   font-family: Chango, sans-serif;

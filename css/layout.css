@@ -5,13 +5,13 @@ body {
   background-color: #f0f0f0;
 }
 
-.view-search {
+.main-search {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-.view-landing {
+div[data-view='landing'] {
   min-height: 100vh;
   padding-top: 30%;
 }

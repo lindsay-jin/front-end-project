@@ -19,7 +19,7 @@
   </head>
   <body>
     <!--landing page-->
-    <div class="view-landing">
+    <div data-view="landing">
       <div class="landing-container">
         <h1 class="landing-h1">Welcome to</h1>
         <h1 class="landing-h1-2">StudySpotFinder!</h1>
@@ -29,14 +29,14 @@
       </div>
     </div>
     <!--search page-->
-    <div class="view-search hidden">
-      <header>
+    <div class="main-search">
+      <header data-view="header">
         <div class="name-container container">
           <h1 class="search-h1">StudySpotFinder</h1>
         </div>
       </header>
       <main>
-        <div class="form-container">
+        <div data-view="form" class="form-container">
           <form class="container" action="">
             <!--first row-->
             <div class="row">
@@ -87,9 +87,30 @@
         </div>
         <!--listings-->
         <div class="listing"></div>
+        <!--details page-->
+        <div data-view="details">
+          <div class="details-img-container">
+            <img src="images/placeholder.png" alt="" />
+          </div>
+          <div class="icon-container">
+            <i class="fa-regular fa-heart"></i>
+          </div>
+          <div class="details-info-container">
+            <h3>Name:</h3>
+            <span></span>
+            <h3>Address:</h3>
+            <span></span>
+          </div>
+          <div class="details-extra">
+            <select name="chair" id="chair">
+              <option value="yes">YES</option>
+              <option value="no">NO</option>
+            </select>
+          </div>
+        </div>
       </main>
 
-      <footer>
+      <footer data-view="footer">
         <div class="bottom-nav-container container">
           <i class="fa-solid fa-magnifying-glass"></i>
           <i class="fa-solid fa-heart"></i>
