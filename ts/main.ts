@@ -287,6 +287,7 @@ interface Favorites {
 }
 
 const favoritesList: Favorites[] = [];
+const $favoriteListings = document.querySelector('.favorite-listings');
 // adding to the favorites page
 $listing.addEventListener('click', (event: Event) => {
   event.preventDefault();
@@ -323,7 +324,6 @@ $listing.addEventListener('click', (event: Event) => {
         bathroom: 'selectOne',
       };
 
-      // Constructing a result object that matches the structure expected by renderEntry
       const result = {
         name: nameValue,
         location: {
@@ -336,9 +336,10 @@ $listing.addEventListener('click', (event: Event) => {
       }
       console.log('favoriteList', favoritesList);
       const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
-      $favorites?.prepend(favoriteEntry);
+      $favoriteListings?.prepend(favoriteEntry);
     }
   }
+  console.count();
 });
 //
 
@@ -353,4 +354,5 @@ $detailsLeft.addEventListener('click', (event: Event) => {
     closestIcon.classList.toggle('fa-solid');
     closestIcon.classList.toggle('fa-regular');
   }
+  console.count();
 });
