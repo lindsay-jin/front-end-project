@@ -14,3 +14,11 @@ const storedData = localStorage.getItem('data-model');
 if (storedData) {
   data = JSON.parse(storedData);
 }
+// When adding or removing favorites
+//localStorage.setItem('favoritesList', JSON.stringify(favoritesList));
+// On page load
+//const storedFavorites = localStorage.getItem('favoritesList');
+//if (storedFavorites) {
+//  favoritesList = JSON.parse(storedFavorites);
+//  updateFavoritesUI(); // Make sure to render the stored favorites
+//}

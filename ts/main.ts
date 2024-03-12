@@ -235,32 +235,28 @@ const $detailsSpanAddress = document.querySelector(
 ) as HTMLElement;
 
 // click on image to show details
-document.addEventListener('DOMContentLoaded', () => {
-  $listing.addEventListener('click', (event) => {
-    event.preventDefault();
+$listing.addEventListener('click', (event) => {
+  event.preventDefault();
 
-    const $eventTarget = event.target as HTMLElement;
-    // console.log('eventTarget', $eventTarget)
-    // console.log('tagName', $eventTarget.tagName);
-    if ($eventTarget && $eventTarget.tagName === 'IMG') {
-      viewSwap('details');
-      const closestElement = $eventTarget.closest('.listing-image');
-      const detailsImgUrl = closestElement?.getAttribute('src') as string;
-      $detailsImage?.setAttribute('src', detailsImgUrl);
+  const $eventTarget = event.target as HTMLElement;
+  if ($eventTarget && $eventTarget.tagName === 'IMG') {
+    viewSwap('details');
+    const closestElement = $eventTarget.closest('.listing-image');
+    const detailsImgUrl = closestElement?.getAttribute('src') as string;
+    $detailsImage?.setAttribute('src', detailsImgUrl);
 
-      const closestParent = $eventTarget.closest(
-        'div[data-view="listing"]',
-      ) as HTMLElement;
+    const closestParent = $eventTarget.closest(
+      'div[data-view="listing"]',
+    ) as HTMLElement;
 
-      const spanName = closestParent.querySelector('.span-name') as HTMLElement;
-      $detailsSpanName.textContent = spanName.textContent;
+    const spanName = closestParent.querySelector('.span-name') as HTMLElement;
+    $detailsSpanName.textContent = spanName.textContent;
 
-      const spanAddress = closestParent.querySelector(
-        '.span-address',
-      ) as HTMLElement;
-      $detailsSpanAddress.textContent = spanAddress.textContent;
-    }
-  });
+    const spanAddress = closestParent.querySelector(
+      '.span-address',
+    ) as HTMLElement;
+    $detailsSpanAddress.textContent = spanAddress.textContent;
+  }
 });
 
 // nav bar
@@ -278,37 +274,83 @@ $navHeartIcon.addEventListener('click', (event: Event) => {
   viewSwap('favorites');
 });
 
-// adding to the favorites page (can we make it cleaner?)
-document.addEventListener('DOMContentLoaded', () => {
-  $listing.addEventListener('click', (event: Event) => {
-    event.preventDefault();
-    const $eventTarget = event.target as HTMLElement;
-    console.log('eventTarget', $eventTarget);
-    if ($eventTarget && $eventTarget.tagName === 'I') {
-      const closestIcon = $eventTarget.closest('i') as HTMLElement;
-      closestIcon.classList.toggle('fa-solid');
-      closestIcon.classList.toggle('fa-regular');
+interface Favorites {
+  photo: string;
+  name: string;
+  address: string;
+  chair: string | 'selectOne';
+  wifi: string | 'selectOne';
+  temp: string | 'selectOne';
+  dog: string | 'selectOne';
+  noise: string | 'selectOne';
+  bathroom: string | 'selectOne';
+}
 
-      if ($eventTarget.classList.contains('fa-solid')) {
-        const likedListing = closestIcon.closest('.listing-container');
-        console.log(likedListing);
+const favoritesList: Favorites[] = [];
+// adding to the favorites page
+$listing.addEventListener('click', (event: Event) => {
+  event.preventDefault();
+  const $eventTarget = event.target as HTMLElement;
+  console.log('eventTarget', $eventTarget);
+  if ($eventTarget && $eventTarget.tagName === 'I') {
+    const closestIcon = $eventTarget.closest('i') as HTMLElement;
+    closestIcon.classList.toggle('fa-solid');
+    closestIcon.classList.toggle('fa-regular');
+
+    if ($eventTarget.classList.contains('fa-solid')) {
+      const likedListing = $eventTarget.closest(
+        '.listing-container',
+      ) as HTMLElement;
+      console.log('likedListing', likedListing);
+
+      const photoValue = likedListing
+        .querySelector('.listing-image')
+        ?.getAttribute('src') as string;
+      const nameValue = likedListing.querySelector('.span-name')
+        ?.textContent as string;
+      const addressValue = likedListing.querySelector('.span-address')
+        ?.textContent as string;
+
+      const favorites: Favorites = {
+        photo: photoValue,
+        name: nameValue,
+        address: addressValue,
+        chair: 'selectOne',
+        wifi: 'selectOne',
+        temp: 'selectOne',
+        dog: 'selectOne',
+        noise: 'selectOne',
+        bathroom: 'selectOne',
+      };
+
+      // Constructing a result object that matches the structure expected by renderEntry
+      const result = {
+        name: nameValue,
+        location: {
+          formatted_address: addressValue,
+        },
+      };
+
+      if (!favoritesList.some((lists) => lists.name === favorites.name)) {
+        favoritesList.push(favorites);
       }
+      console.log('favoriteList', favoritesList);
+      const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
+      $favorites?.prepend(favoriteEntry);
     }
-  });
+  }
 });
+//
 
 const $detailsLeft = document.querySelector('.details-left') as HTMLElement;
-document.addEventListener('DOMContentLoaded', () => {
-  $detailsLeft.addEventListener('click', (event: Event) => {
-    event.preventDefault();
-    const $eventTarget = event.target as HTMLElement;
-    console.log('eventTarget', $eventTarget);
-    if ($eventTarget && $eventTarget.tagName === 'I') {
-      const closestIcon = $eventTarget.closest('i') as HTMLElement;
-      closestIcon.classList.toggle('fa-solid');
-      closestIcon.classList.toggle('fa-regular');
-    }
-  });
-});
 
-//
+$detailsLeft.addEventListener('click', (event: Event) => {
+  event.preventDefault();
+  const $eventTarget = event.target as HTMLElement;
+  console.log('eventTarget', $eventTarget);
+  if ($eventTarget && $eventTarget.tagName === 'I') {
+    const closestIcon = $eventTarget.closest('i') as HTMLElement;
+    closestIcon.classList.toggle('fa-solid');
+    closestIcon.classList.toggle('fa-regular');
+  }
+});

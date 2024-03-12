@@ -174,24 +174,20 @@ const $detailsImage = document.querySelector('.details-image');
 const $detailsSpanName = document.querySelector('.details-span-name');
 const $detailsSpanAddress = document.querySelector('.details-span-address');
 // click on image to show details
-document.addEventListener('DOMContentLoaded', () => {
-  $listing.addEventListener('click', (event) => {
-    event.preventDefault();
-    const $eventTarget = event.target;
-    // console.log('eventTarget', $eventTarget)
-    // console.log('tagName', $eventTarget.tagName);
-    if ($eventTarget && $eventTarget.tagName === 'IMG') {
-      viewSwap('details');
-      const closestElement = $eventTarget.closest('.listing-image');
-      const detailsImgUrl = closestElement?.getAttribute('src');
-      $detailsImage?.setAttribute('src', detailsImgUrl);
-      const closestParent = $eventTarget.closest('div[data-view="listing"]');
-      const spanName = closestParent.querySelector('.span-name');
-      $detailsSpanName.textContent = spanName.textContent;
-      const spanAddress = closestParent.querySelector('.span-address');
-      $detailsSpanAddress.textContent = spanAddress.textContent;
-    }
-  });
+$listing.addEventListener('click', (event) => {
+  event.preventDefault();
+  const $eventTarget = event.target;
+  if ($eventTarget && $eventTarget.tagName === 'IMG') {
+    viewSwap('details');
+    const closestElement = $eventTarget.closest('.listing-image');
+    const detailsImgUrl = closestElement?.getAttribute('src');
+    $detailsImage?.setAttribute('src', detailsImgUrl);
+    const closestParent = $eventTarget.closest('div[data-view="listing"]');
+    const spanName = closestParent.querySelector('.span-name');
+    $detailsSpanName.textContent = spanName.textContent;
+    const spanAddress = closestParent.querySelector('.span-address');
+    $detailsSpanAddress.textContent = spanAddress.textContent;
+  }
 });
 // nav bar
 const $navSearchIcon = document.querySelector('.nav-search-icon');
@@ -204,34 +200,61 @@ $navHeartIcon.addEventListener('click', (event) => {
   event.preventDefault();
   viewSwap('favorites');
 });
-// adding to the favorites page (can we make it cleaner?)
-document.addEventListener('DOMContentLoaded', () => {
-  $listing.addEventListener('click', (event) => {
-    event.preventDefault();
-    const $eventTarget = event.target;
-    console.log('eventTarget', $eventTarget);
-    if ($eventTarget && $eventTarget.tagName === 'I') {
-      const closestIcon = $eventTarget.closest('i');
-      closestIcon.classList.toggle('fa-solid');
-      closestIcon.classList.toggle('fa-regular');
-      if ($eventTarget.classList.contains('fa-solid')) {
-        const likedListing = closestIcon.closest('.listing-container');
-        console.log(likedListing);
+let favoritesList = [];
+// adding to the favorites page
+$listing.addEventListener('click', (event) => {
+  event.preventDefault();
+  const $eventTarget = event.target;
+  console.log('eventTarget', $eventTarget);
+  if ($eventTarget && $eventTarget.tagName === 'I') {
+    const closestIcon = $eventTarget.closest('i');
+    closestIcon.classList.toggle('fa-solid');
+    closestIcon.classList.toggle('fa-regular');
+    if ($eventTarget.classList.contains('fa-solid')) {
+      const likedListing = $eventTarget.closest('.listing-container');
+      console.log('likedListing', likedListing);
+      const photoValue = likedListing
+        .querySelector('.listing-image')
+        ?.getAttribute('src');
+      const nameValue = likedListing.querySelector('.span-name')?.textContent;
+      const addressValue =
+        likedListing.querySelector('.span-address')?.textContent;
+      const favorites = {
+        photo: photoValue,
+        name: nameValue,
+        address: addressValue,
+        chair: 'selectOne',
+        wifi: 'selectOne',
+        temp: 'selectOne',
+        dog: 'selectOne',
+        noise: 'selectOne',
+        bathroom: 'selectOne',
+      };
+      // Constructing a result object that matches the structure expected by renderEntry
+      const result = {
+        name: nameValue,
+        location: {
+          formatted_address: addressValue,
+        },
+      };
+      if (!favoritesList.some((lists) => lists.name === favorites.name)) {
+        favoritesList.push(favorites);
       }
+      console.log('favoriteList', favoritesList);
+      const favoriteEntry = renderEntry(result, photoValue);
+      $favorites?.prepend(favoriteEntry);
     }
-  });
-});
-const $detailsLeft = document.querySelector('.details-left');
-document.addEventListener('DOMContentLoaded', () => {
-  $detailsLeft.addEventListener('click', (event) => {
-    event.preventDefault();
-    const $eventTarget = event.target;
-    console.log('eventTarget', $eventTarget);
-    if ($eventTarget && $eventTarget.tagName === 'I') {
-      const closestIcon = $eventTarget.closest('i');
-      closestIcon.classList.toggle('fa-solid');
-      closestIcon.classList.toggle('fa-regular');
-    }
-  });
+  }
 });
 //
+const $detailsLeft = document.querySelector('.details-left');
+$detailsLeft.addEventListener('click', (event) => {
+  event.preventDefault();
+  const $eventTarget = event.target;
+  console.log('eventTarget', $eventTarget);
+  if ($eventTarget && $eventTarget.tagName === 'I') {
+    const closestIcon = $eventTarget.closest('i');
+    closestIcon.classList.toggle('fa-solid');
+    closestIcon.classList.toggle('fa-regular');
+  }
+});
