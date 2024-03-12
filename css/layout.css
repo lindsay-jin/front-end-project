@@ -127,6 +127,7 @@ div[data-view='listing'] {
 div[data-view='details'] {
   padding: 0 1rem;
   color: #384167;
+  margin-top: 10px;
 }
 
 .details-img-container {

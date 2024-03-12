@@ -15,6 +15,7 @@ const $header = document.querySelector('header[data-view="header"]');
 const $footer = document.querySelector('footer[data-view="footer"]');
 const $form = document.querySelector('div[data-view="form"]');
 const $details = document.querySelector('div[data-view="details"]');
+const $favorites = document.querySelector('div[data-view="favorites"]');
 // view swap
 function viewSwap(view) {
   console.log(`viewSwap called with view: ${view}`);
@@ -25,6 +26,7 @@ function viewSwap(view) {
     $footer.classList.add('hidden');
     $details?.classList.add('hidden');
     $listing.classList.add('hidden');
+    $favorites?.classList.add('hidden');
   } else if (view === 'form') {
     $form.classList.remove('hidden');
     $listing.classList.remove('hidden');
@@ -32,8 +34,18 @@ function viewSwap(view) {
     $header.classList.remove('hidden');
     $footer.classList.remove('hidden');
     $details?.classList.add('hidden');
+    $favorites?.classList.add('hidden');
   } else if (view === 'details') {
     $details?.classList.remove('hidden');
+    $header.classList.remove('hidden');
+    $footer.classList.remove('hidden');
+    $viewLanding?.classList.add('hidden');
+    $form.classList.add('hidden');
+    $listing.classList.add('hidden');
+    $favorites?.classList.add('hidden');
+  } else if (view === 'favorites') {
+    $favorites?.classList.remove('hidden');
+    $details?.classList.add('hidden');
     $header.classList.remove('hidden');
     $footer.classList.remove('hidden');
     $viewLanding?.classList.add('hidden');
@@ -127,7 +139,7 @@ function renderEntry(result, photo) {
   const $heartContainer = document.createElement('div');
   $heartContainer.className = 'heart-container';
   const $iHeart = document.createElement('i');
-  $iHeart.className = 'fa-regular fa-heart';
+  $iHeart.className = 'fa-regular fa-heart heart-icon';
   const $infoContainer = document.createElement('div');
   $infoContainer.className = 'info-container';
   const $nameContainer = document.createElement('div');
@@ -161,12 +173,15 @@ function renderEntry(result, photo) {
 const $detailsImage = document.querySelector('.details-image');
 const $detailsSpanName = document.querySelector('.details-span-name');
 const $detailsSpanAddress = document.querySelector('.details-span-address');
+// click on image to show details
 document.addEventListener('DOMContentLoaded', () => {
   $listing.addEventListener('click', (event) => {
     event.preventDefault();
-    viewSwap('details');
-    let $eventTarget = event.target;
+    const $eventTarget = event.target;
+    //console.log('eventTarget', $eventTarget)
+    //console.log('tagName', $eventTarget.tagName);
     if ($eventTarget && $eventTarget.tagName === 'IMG') {
+      viewSwap('details');
       const closestElement = $eventTarget.closest('.listing-image');
       const detailsImgUrl = closestElement?.getAttribute('src');
       $detailsImage?.setAttribute('src', detailsImgUrl);
@@ -175,6 +190,43 @@ document.addEventListener('DOMContentLoaded', () => {
       $detailsSpanName.textContent = spanName.textContent;
       const spanAddress = closestParent.querySelector('.span-address');
       $detailsSpanAddress.textContent = spanAddress.textContent;
+    }
+  });
+});
+// nav bar
+const $navSearchIcon = document.querySelector('.nav-search-icon');
+$navSearchIcon.addEventListener('click', (event) => {
+  event.preventDefault();
+  viewSwap('form');
+});
+const $navHeartIcon = document.querySelector('.nav-heart-icon');
+$navHeartIcon.addEventListener('click', (event) => {
+  event.preventDefault();
+  viewSwap('favorites');
+});
+// adding to the favorites page (can we make it cleaner?)
+document.addEventListener('DOMContentLoaded', () => {
+  $listing.addEventListener('click', (event) => {
+    event.preventDefault();
+    const $eventTarget = event.target;
+    console.log('eventTarget', $eventTarget);
+    if ($eventTarget && $eventTarget.tagName === 'I') {
+      const closestIcon = $eventTarget.closest('i');
+      closestIcon.classList.toggle('fa-solid');
+      closestIcon.classList.toggle('fa-regular');
+    }
+  });
+});
+const $detailsLeft = document.querySelector('.details-left');
+document.addEventListener('DOMContentLoaded', () => {
+  $detailsLeft.addEventListener('click', (event) => {
+    event.preventDefault();
+    const $eventTarget = event.target;
+    console.log('eventTarget', $eventTarget);
+    if ($eventTarget && $eventTarget.tagName === 'I') {
+      const closestIcon = $eventTarget.closest('i');
+      closestIcon.classList.toggle('fa-solid');
+      closestIcon.classList.toggle('fa-regular');
     }
   });
 });

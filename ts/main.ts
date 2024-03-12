@@ -32,6 +32,7 @@ const $form = document.querySelector(
   'div[data-view="form"]',
 ) as HTMLFormElement;
 const $details = document.querySelector('div[data-view="details"]');
+const $favorites = document.querySelector('div[data-view="favorites"]');
 // view swap
 function viewSwap(view: string): void {
   console.log(`viewSwap called with view: ${view}`);
@@ -42,6 +43,7 @@ function viewSwap(view: string): void {
     $footer.classList.add('hidden');
     $details?.classList.add('hidden');
     $listing.classList.add('hidden');
+    $favorites?.classList.add('hidden');
   } else if (view === 'form') {
     $form.classList.remove('hidden');
     $listing.classList.remove('hidden');
@@ -49,8 +51,18 @@ function viewSwap(view: string): void {
     $header.classList.remove('hidden');
     $footer.classList.remove('hidden');
     $details?.classList.add('hidden');
+    $favorites?.classList.add('hidden');
   } else if (view === 'details') {
     $details?.classList.remove('hidden');
+    $header.classList.remove('hidden');
+    $footer.classList.remove('hidden');
+    $viewLanding?.classList.add('hidden');
+    $form.classList.add('hidden');
+    $listing.classList.add('hidden');
+    $favorites?.classList.add('hidden');
+  } else if (view === 'favorites') {
+    $favorites?.classList.remove('hidden');
+    $details?.classList.add('hidden');
     $header.classList.remove('hidden');
     $footer.classList.remove('hidden');
     $viewLanding?.classList.add('hidden');
@@ -169,7 +181,7 @@ function renderEntry(result: any, photo: string): HTMLElement {
   $heartContainer.className = 'heart-container';
 
   const $iHeart = document.createElement('i');
-  $iHeart.className = 'fa-regular fa-heart';
+  $iHeart.className = 'fa-regular fa-heart heart-icon';
 
   const $infoContainer = document.createElement('div');
   $infoContainer.className = 'info-container';
@@ -221,13 +233,16 @@ const $detailsSpanAddress = document.querySelector(
   '.details-span-address',
 ) as HTMLElement;
 
+// click on image to show details
 document.addEventListener('DOMContentLoaded', () => {
   $listing.addEventListener('click', (event) => {
     event.preventDefault();
-    viewSwap('details');
 
     const $eventTarget = event.target as HTMLElement;
+    // console.log('eventTarget', $eventTarget)
+    // console.log('tagName', $eventTarget.tagName);
     if ($eventTarget && $eventTarget.tagName === 'IMG') {
+      viewSwap('details');
       const closestElement = $eventTarget.closest('.listing-image');
       const detailsImgUrl = closestElement?.getAttribute('src') as string;
       $detailsImage?.setAttribute('src', detailsImgUrl);
@@ -243,6 +258,49 @@ document.addEventListener('DOMContentLoaded', () => {
         '.span-address',
       ) as HTMLElement;
       $detailsSpanAddress.textContent = spanAddress.textContent;
+    }
+  });
+});
+
+// nav bar
+const $navSearchIcon = document.querySelector(
+  '.nav-search-icon',
+) as HTMLElement;
+$navSearchIcon.addEventListener('click', (event: Event) => {
+  event.preventDefault();
+  viewSwap('form');
+});
+
+const $navHeartIcon = document.querySelector('.nav-heart-icon') as HTMLElement;
+$navHeartIcon.addEventListener('click', (event: Event) => {
+  event.preventDefault();
+  viewSwap('favorites');
+});
+
+// adding to the favorites page (can we make it cleaner?)
+document.addEventListener('DOMContentLoaded', () => {
+  $listing.addEventListener('click', (event: Event) => {
+    event.preventDefault();
+    const $eventTarget = event.target as HTMLElement;
+    console.log('eventTarget', $eventTarget);
+    if ($eventTarget && $eventTarget.tagName === 'I') {
+      const closestIcon = $eventTarget.closest('i') as HTMLElement;
+      closestIcon.classList.toggle('fa-solid');
+      closestIcon.classList.toggle('fa-regular');
+    }
+  });
+});
+
+const $detailsLeft = document.querySelector('.details-left') as HTMLElement;
+document.addEventListener('DOMContentLoaded', () => {
+  $detailsLeft.addEventListener('click', (event: Event) => {
+    event.preventDefault();
+    const $eventTarget = event.target as HTMLElement;
+    console.log('eventTarget', $eventTarget);
+    if ($eventTarget && $eventTarget.tagName === 'I') {
+      const closestIcon = $eventTarget.closest('i') as HTMLElement;
+      closestIcon.classList.toggle('fa-solid');
+      closestIcon.classList.toggle('fa-regular');
     }
   });
 });
