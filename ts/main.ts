@@ -4,6 +4,7 @@ interface Obj {
   open?: boolean;
   show?: number;
   sortBy?: string;
+  entryId?: number;
 }
 
 // landing page
@@ -287,6 +288,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const closestIcon = $eventTarget.closest('i') as HTMLElement;
       closestIcon.classList.toggle('fa-solid');
       closestIcon.classList.toggle('fa-regular');
+
+      if ($eventTarget.classList.contains('fa-solid')) {
+        const likedListing = closestIcon.closest('.listing-container');
+        console.log(likedListing);
+      }
     }
   });
 });
@@ -304,3 +310,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+//

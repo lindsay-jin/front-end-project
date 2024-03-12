@@ -178,8 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
   $listing.addEventListener('click', (event) => {
     event.preventDefault();
     const $eventTarget = event.target;
-    //console.log('eventTarget', $eventTarget)
-    //console.log('tagName', $eventTarget.tagName);
+    // console.log('eventTarget', $eventTarget)
+    // console.log('tagName', $eventTarget.tagName);
     if ($eventTarget && $eventTarget.tagName === 'IMG') {
       viewSwap('details');
       const closestElement = $eventTarget.closest('.listing-image');
@@ -214,6 +214,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const closestIcon = $eventTarget.closest('i');
       closestIcon.classList.toggle('fa-solid');
       closestIcon.classList.toggle('fa-regular');
+      if ($eventTarget.classList.contains('fa-solid')) {
+        const likedListing = closestIcon.closest('.listing-container');
+        console.log(likedListing);
+      }
     }
   });
 });
@@ -230,3 +234,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+//

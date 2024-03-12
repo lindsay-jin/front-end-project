@@ -2,16 +2,16 @@
 
 interface Data {
   view: string;
-  entries: Obj[];
   editing: Obj | null;
   nextEntryId: number;
+  likedEntries: Obj[] | null;
 }
 
 let data: Data = {
-  view: 'entry-form',
-  entries: [],
+  view: 'landing',
   editing: null,
   nextEntryId: 1,
+  likedEntries: [],
 };
 
 window.addEventListener('beforeunload', () => {
