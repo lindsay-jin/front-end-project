@@ -226,15 +226,13 @@ function renderEntry(result: any, photo: string): HTMLElement {
   return $listingContainer;
 }
 
-const $detailsImage = document.querySelector('.details-image');
-const $detailsSpanName = document.querySelector(
-  '.details-span-name',
-) as HTMLElement;
-const $detailsSpanAddress = document.querySelector(
-  '.details-span-address',
-) as HTMLElement;
-
 // click on image to show details
+interface ListingDetails {
+  name: string;
+  address: string;
+  photo: string;
+}
+
 $listing.addEventListener('click', (event) => {
   event.preventDefault();
 
@@ -242,20 +240,15 @@ $listing.addEventListener('click', (event) => {
   if ($eventTarget && $eventTarget.tagName === 'IMG') {
     viewSwap('details');
     const closestElement = $eventTarget.closest('.listing-image');
-    const detailsImgUrl = closestElement?.getAttribute('src') as string;
-    $detailsImage?.setAttribute('src', detailsImgUrl);
-
-    const closestParent = $eventTarget.closest(
-      'div[data-view="listing"]',
-    ) as HTMLElement;
-
-    const spanName = closestParent.querySelector('.span-name') as HTMLElement;
-    $detailsSpanName.textContent = spanName.textContent;
-
-    const spanAddress = closestParent.querySelector(
-      '.span-address',
-    ) as HTMLElement;
-    $detailsSpanAddress.textContent = spanAddress.textContent;
+    const $nameValue = closestElement?.querySelector('.span-name')?.textContent as string;
+    const $addressValue = closestElement?.querySelector('.span-address')?.textContent as string;
+    const photoUrl = closestElement?.getAttribute('src') as string;
+    const $listingDetails: ListingDetails = {
+      name: $nameValue,
+      address: $addressValue,
+      photo: photoUrl,
+    };
+    renderDetails($listingDetails);
   }
 });
 
@@ -358,7 +351,9 @@ $detailsLeft.addEventListener('click', (event: Event) => {
 });
 
 //render details
-function renderDetails(){
+function renderDetails(listing: ListingDetails){
+  const $detailsContainer = document.createElement('div');
+  $detailsContainer.className = 'details-container';
   //left side
   const $detailsLeft = document.createElement('div');
   $detailsLeft.className = 'details-left';
@@ -371,6 +366,7 @@ function renderDetails(){
   const $heartIcon = document.createElement('i');
   $heartIcon.className = 'fa-regular fa-heart heart-icon';
 
+  $detailsContainer.appendChild($detailsLeft);
   $detailsLeft.appendChild($detailsImgContainer);
   $detailsLeft.appendChild($iconContainer);
   $detailsImgContainer.appendChild($detailsImage);
@@ -390,6 +386,7 @@ function renderDetails(){
   const $addressInfo = document.createElement('span');
   $addressInfo.className = 'details-span-address';
 
+  $detailsContainer.appendChild($detailsRight);
   $detailsRight.appendChild($detailsInfoContainer);
   $detailsInfoContainer.appendChild($nameTitle);
   $detailsInfoContainer.appendChild($nameInfo);
@@ -486,4 +483,6 @@ function renderDetails(){
 
   $detailsExtra.appendChild($editButtonContainer);
   $editButtonContainer.appendChild($editButton);
+
+  return $detailsContainer;
 }

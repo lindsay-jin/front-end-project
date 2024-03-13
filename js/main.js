@@ -170,23 +170,21 @@ function renderEntry(result, photo) {
     $addressContainer.appendChild($spanAddress);
     return $listingContainer;
 }
-const $detailsImage = document.querySelector('.details-image');
-const $detailsSpanName = document.querySelector('.details-span-name');
-const $detailsSpanAddress = document.querySelector('.details-span-address');
-// click on image to show details
 $listing.addEventListener('click', (event) => {
     event.preventDefault();
     const $eventTarget = event.target;
     if ($eventTarget && $eventTarget.tagName === 'IMG') {
         viewSwap('details');
         const closestElement = $eventTarget.closest('.listing-image');
-        const detailsImgUrl = closestElement?.getAttribute('src');
-        $detailsImage?.setAttribute('src', detailsImgUrl);
-        const closestParent = $eventTarget.closest('div[data-view="listing"]');
-        const spanName = closestParent.querySelector('.span-name');
-        $detailsSpanName.textContent = spanName.textContent;
-        const spanAddress = closestParent.querySelector('.span-address');
-        $detailsSpanAddress.textContent = spanAddress.textContent;
+        const $nameValue = closestElement?.querySelector('.span-name')?.textContent;
+        const $addressValue = closestElement?.querySelector('.span-address')?.textContent;
+        const photoUrl = closestElement?.getAttribute('src');
+        const $listingDetails = {
+            name: $nameValue,
+            address: $addressValue,
+            photo: photoUrl,
+        };
+        renderDetails($listingDetails);
     }
 });
 // nav bar
@@ -262,7 +260,9 @@ $detailsLeft.addEventListener('click', (event) => {
     console.count();
 });
 //render details
-function renderDetails() {
+function renderDetails(listing) {
+    const $detailsContainer = document.createElement('div');
+    $detailsContainer.className = 'details-container';
     //left side
     const $detailsLeft = document.createElement('div');
     $detailsLeft.className = 'details-left';
@@ -274,6 +274,7 @@ function renderDetails() {
     $iconContainer.className = 'icon-container';
     const $heartIcon = document.createElement('i');
     $heartIcon.className = 'fa-regular fa-heart heart-icon';
+    $detailsContainer.appendChild($detailsLeft);
     $detailsLeft.appendChild($detailsImgContainer);
     $detailsLeft.appendChild($iconContainer);
     $detailsImgContainer.appendChild($detailsImage);
@@ -291,6 +292,7 @@ function renderDetails() {
     $addressTitle.textContent = 'Address: ';
     const $addressInfo = document.createElement('span');
     $addressInfo.className = 'details-span-address';
+    $detailsContainer.appendChild($detailsRight);
     $detailsRight.appendChild($detailsInfoContainer);
     $detailsInfoContainer.appendChild($nameTitle);
     $detailsInfoContainer.appendChild($nameInfo);
@@ -380,4 +382,5 @@ function renderDetails() {
     $editButton.type = 'button';
     $detailsExtra.appendChild($editButtonContainer);
     $editButtonContainer.appendChild($editButton);
+    return $detailsContainer;
 }
