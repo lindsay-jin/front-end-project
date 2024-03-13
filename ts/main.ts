@@ -25,7 +25,6 @@ interface ListingDetails {
   photo: string;
 }
 
-// const favoritesList: Favorites[] = [];
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
 
@@ -91,13 +90,11 @@ function viewSwap(view: string): void {
 }
 
 $startSearchButton?.addEventListener('click', (event: Event) => {
-  event?.preventDefault();
   viewSwap('form');
 });
 
 const $actualForm = document.querySelector('form') as HTMLFormElement;
 $resetButton?.addEventListener('click', (event: Event) => {
-  event.preventDefault();
   $actualForm.reset();
 });
 
@@ -253,8 +250,6 @@ function renderEntry(result: any, photo: string): HTMLElement {
 
 // click on image to show details
 $listing.addEventListener('click', (event) => {
-  event.preventDefault();
-
   const $eventTarget = event.target as HTMLElement;
   if ($eventTarget && $eventTarget.tagName === 'IMG') {
     viewSwap('details');
@@ -283,13 +278,11 @@ const $navSearchIcon = document.querySelector(
   '.nav-search-icon',
 ) as HTMLElement;
 $navSearchIcon.addEventListener('click', (event: Event) => {
-  event.preventDefault();
   viewSwap('form');
 });
 
 const $navHeartIcon = document.querySelector('.nav-heart-icon') as HTMLElement;
 $navHeartIcon.addEventListener('click', (event: Event) => {
-  event.preventDefault();
   viewSwap('favorites');
 });
 
@@ -297,7 +290,6 @@ const $favoriteListings = document.querySelector('.favorite-listings');
 
 // adding to the favorites page***************************
 $listing.addEventListener('click', (event: Event) => {
-  event.preventDefault();
   const $eventTarget = event.target as HTMLElement;
   if ($eventTarget && $eventTarget.tagName === 'I') {
     const closestIcon = $eventTarget.closest('i') as HTMLElement;
@@ -347,7 +339,6 @@ $listing.addEventListener('click', (event: Event) => {
 
 // details page clicking on heart
 $details?.addEventListener('click', (event: Event) => {
-  event.preventDefault();
   const $eventTarget = event.target as HTMLElement;
   if ($eventTarget && $eventTarget.tagName === 'I') {
     const closestIcon = $eventTarget.closest('i') as HTMLElement;
@@ -613,7 +604,6 @@ function renderFavorites(favorite: Favorites): HTMLElement {
 
 // details page from favorites page
 $favoriteListings?.addEventListener('click', (event: Event)=>{
-  event.preventDefault();
   const $eventTarget = event.target as HTMLElement;
   if ($eventTarget && $eventTarget.tagName === 'IMG') {
     viewSwap('details');

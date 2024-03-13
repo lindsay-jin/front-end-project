@@ -1,5 +1,4 @@
 "use strict";
-// const favoritesList: Favorites[] = [];
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
 // search page
@@ -57,12 +56,10 @@ function viewSwap(view) {
     }
 }
 $startSearchButton?.addEventListener('click', (event) => {
-    event?.preventDefault();
     viewSwap('form');
 });
 const $actualForm = document.querySelector('form');
 $resetButton?.addEventListener('click', (event) => {
-    event.preventDefault();
     $actualForm.reset();
 });
 const options = {
@@ -179,7 +176,6 @@ function renderEntry(result, photo) {
 }
 // click on image to show details
 $listing.addEventListener('click', (event) => {
-    event.preventDefault();
     const $eventTarget = event.target;
     if ($eventTarget && $eventTarget.tagName === 'IMG') {
         viewSwap('details');
@@ -204,18 +200,15 @@ $listing.addEventListener('click', (event) => {
 // nav bar
 const $navSearchIcon = document.querySelector('.nav-search-icon');
 $navSearchIcon.addEventListener('click', (event) => {
-    event.preventDefault();
     viewSwap('form');
 });
 const $navHeartIcon = document.querySelector('.nav-heart-icon');
 $navHeartIcon.addEventListener('click', (event) => {
-    event.preventDefault();
     viewSwap('favorites');
 });
 const $favoriteListings = document.querySelector('.favorite-listings');
 // adding to the favorites page***************************
 $listing.addEventListener('click', (event) => {
-    event.preventDefault();
     const $eventTarget = event.target;
     if ($eventTarget && $eventTarget.tagName === 'I') {
         const closestIcon = $eventTarget.closest('i');
@@ -257,7 +250,6 @@ $listing.addEventListener('click', (event) => {
 });
 // details page clicking on heart
 $details?.addEventListener('click', (event) => {
-    event.preventDefault();
     const $eventTarget = event.target;
     if ($eventTarget && $eventTarget.tagName === 'I') {
         const closestIcon = $eventTarget.closest('i');
@@ -485,7 +477,6 @@ function renderFavorites(favorite) {
 }
 // details page from favorites page
 $favoriteListings?.addEventListener('click', (event) => {
-    event.preventDefault();
     const $eventTarget = event.target;
     if ($eventTarget && $eventTarget.tagName === 'IMG') {
         viewSwap('details');
