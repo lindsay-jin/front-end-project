@@ -153,6 +153,8 @@ div[data-view="details"] {
 
 .details-info-container {
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .details-info-container h3 {
@@ -272,18 +274,32 @@ footer {
   div[data-view="details"] {
     display: flex;
     padding: 0 2rem;
+    flex-direction: column;
   }
 
   .details-left {
-    width: 50%;
+    width: 100%;
     margin-right: 20px;
   }
 
+  .details-image {
+    max-width: 500px;
+    height: auto;
+  }
+
   .details-right {
-    width: 50%;
+    width: 100%;
+  }
+
+  .icon-container {
+    width: 500px;
+    display: flex;
+    justify-content: end;
   }
 
   .edit-button-container {
     margin-top: 30px;
+    width: 500px;
+    justify-content: end;
   }
 }
