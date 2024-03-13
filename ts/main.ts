@@ -239,16 +239,25 @@ $listing.addEventListener('click', (event) => {
   const $eventTarget = event.target as HTMLElement;
   if ($eventTarget && $eventTarget.tagName === 'IMG') {
     viewSwap('details');
-    const closestElement = $eventTarget.closest('.listing-image');
-    const $nameValue = closestElement?.querySelector('.span-name')?.textContent as string;
-    const $addressValue = closestElement?.querySelector('.span-address')?.textContent as string;
-    const photoUrl = closestElement?.getAttribute('src') as string;
+    const closestElement = $eventTarget.closest('.listing-container');
+    console.log('closestElement', closestElement);
+    const $nameValue = closestElement?.querySelector('.span-name')
+      ?.textContent as string;
+    const $addressValue = closestElement?.querySelector('.span-address')
+      ?.textContent as string;
+    const photoUrl = $eventTarget.getAttribute('src') as string;
     const $listingDetails: ListingDetails = {
       name: $nameValue,
       address: $addressValue,
       photo: photoUrl,
     };
-    renderDetails($listingDetails);
+
+    if ($details) {
+      $details.innerHTML = '';
+    }
+    const detailedEntry = renderDetails($listingDetails);
+    console.log('detailedEntry', detailedEntry);
+    $details?.prepend(detailedEntry);
   }
 });
 
@@ -281,6 +290,7 @@ interface Favorites {
 
 const favoritesList: Favorites[] = [];
 const $favoriteListings = document.querySelector('.favorite-listings');
+
 // adding to the favorites page
 $listing.addEventListener('click', (event: Event) => {
   event.preventDefault();
@@ -350,17 +360,18 @@ $detailsLeft.addEventListener('click', (event: Event) => {
   console.count();
 });
 
-//render details
-function renderDetails(listing: ListingDetails){
+// render details
+function renderDetails(listing: ListingDetails): HTMLElement {
   const $detailsContainer = document.createElement('div');
   $detailsContainer.className = 'details-container';
-  //left side
+  // left side
   const $detailsLeft = document.createElement('div');
   $detailsLeft.className = 'details-left';
   const $detailsImgContainer = document.createElement('div');
   $detailsImgContainer.className = 'details-img-container';
   const $detailsImage = document.createElement('img');
   $detailsImage.className = 'details-image';
+  $detailsImage.setAttribute('src', listing.photo);
   const $iconContainer = document.createElement('div');
   $iconContainer.className = 'icon-container';
   const $heartIcon = document.createElement('i');
@@ -372,7 +383,7 @@ function renderDetails(listing: ListingDetails){
   $detailsImgContainer.appendChild($detailsImage);
   $iconContainer.appendChild($heartIcon);
 
-  //right side
+  // right side
   const $detailsRight = document.createElement('div');
   $detailsRight.className = 'details-right';
   const $detailsInfoContainer = document.createElement('div');
@@ -381,10 +392,12 @@ function renderDetails(listing: ListingDetails){
   $nameTitle.textContent = 'Name: ';
   const $nameInfo = document.createElement('span');
   $nameInfo.className = 'details-span-name';
+  $nameInfo.textContent = listing.name;
   const $addressTitle = document.createElement('h3');
   $addressTitle.textContent = 'Address: ';
   const $addressInfo = document.createElement('span');
   $addressInfo.className = 'details-span-address';
+  $addressInfo.textContent = listing.address;
 
   $detailsContainer.appendChild($detailsRight);
   $detailsRight.appendChild($detailsInfoContainer);
@@ -392,12 +405,12 @@ function renderDetails(listing: ListingDetails){
   $detailsInfoContainer.appendChild($nameInfo);
   $detailsInfoContainer.appendChild($addressTitle);
   $detailsInfoContainer.appendChild($addressInfo);
-  //details-extra: chair
+  // details-extra: chair
   const $detailsExtra = document.createElement('div');
   $detailsExtra.className = 'details-extra';
   const $chairLabel = document.createElement('label');
-  $chairLabel .setAttribute('for', 'chair');
-  $chairLabel .textContent = 'Comfy Chair: ';
+  $chairLabel.setAttribute('for', 'chair');
+  $chairLabel.textContent = 'Comfy Chair: ';
   const $chairSelect = document.createElement('select');
   $chairSelect.setAttribute('name', 'chair');
   $chairSelect.setAttribute('id', 'chair');
@@ -419,7 +432,7 @@ function renderDetails(listing: ListingDetails){
   $chairSelect.appendChild($chairOptionYes);
   $chairSelect.appendChild($chairOptionNo);
 
-  //wifi
+  // wifi
   const $wifiLabel = document.createElement('label');
   $wifiLabel.setAttribute('for', 'wifi');
   $wifiLabel.textContent = 'Free Wifi: ';
@@ -428,21 +441,21 @@ function renderDetails(listing: ListingDetails){
   $wifiSelect.setAttribute('id', 'wifi');
   $wifiSelect.disabled = true;
   const $wifiOptions = [
-    {value: 'selectOne', text: 'Select One'},
-    {value: 'yes', text: 'YES'},
-    {value: 'no', text: 'NO'},
+    { value: 'selectOne', text: 'Select One' },
+    { value: 'yes', text: 'YES' },
+    { value: 'no', text: 'NO' },
   ];
-  $wifiOptions.forEach(opt=>{
+  $wifiOptions.forEach((opt) => {
     const $option = document.createElement('option');
     $option.value = opt.value;
     $option.textContent = opt.text;
     $wifiSelect.appendChild($option);
-  })
+  });
 
   $detailsExtra.appendChild($wifiLabel);
   $detailsExtra.appendChild($wifiSelect);
 
-  //temp
+  // temp
   const $tempLabel = document.createElement('label');
   $tempLabel.setAttribute('for', 'temp');
   $tempLabel.textContent = 'Temperature';
@@ -474,12 +487,13 @@ function renderDetails(listing: ListingDetails){
   $tempSelect.appendChild($optionPerfect);
   $tempSelect.appendChild($optionHot);
 
-  //edit button
+  // edit button
   const $editButtonContainer = document.createElement('div');
   $editButtonContainer.className = 'edit-button-container';
   const $editButton = document.createElement('button');
   $editButton.className = 'edit-button';
   $editButton.type = 'button';
+  $editButton.textContent = 'EDIT';
 
   $detailsExtra.appendChild($editButtonContainer);
   $editButtonContainer.appendChild($editButton);
