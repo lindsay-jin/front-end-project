@@ -342,13 +342,10 @@ $listing.addEventListener('click', (event: Event) => {
       $favoriteListings?.prepend(favoriteEntry);
     }
   }
-  console.count();
 });
+
 //
-
-const $detailsLeft = document.querySelector('.details-left') as HTMLElement;
-
-$detailsLeft.addEventListener('click', (event: Event) => {
+$details?.addEventListener('click', (event: Event) => {
   event.preventDefault();
   const $eventTarget = event.target as HTMLElement;
   console.log('eventTarget', $eventTarget);
@@ -356,8 +353,48 @@ $detailsLeft.addEventListener('click', (event: Event) => {
     const closestIcon = $eventTarget.closest('i') as HTMLElement;
     closestIcon.classList.toggle('fa-solid');
     closestIcon.classList.toggle('fa-regular');
+
+    if ($eventTarget.classList.contains('fa-solid')) {
+      const likedListing = $eventTarget.closest(
+        '.details-container',
+      ) as HTMLElement;
+      console.log('likedListing', likedListing);
+
+      const photoValue = likedListing
+        .querySelector('.details-image')
+        ?.getAttribute('src') as string;
+      const nameValue = likedListing.querySelector('.span-name')
+        ?.textContent as string;
+      const addressValue = likedListing.querySelector('.span-address')
+        ?.textContent as string;
+
+      const favorites: Favorites = {
+        photo: photoValue,
+        name: nameValue,
+        address: addressValue,
+        chair: 'selectOne',
+        wifi: 'selectOne',
+        temp: 'selectOne',
+        dog: 'selectOne',
+        noise: 'selectOne',
+        bathroom: 'selectOne',
+      };
+
+      const result = {
+        name: nameValue,
+        location: {
+          formatted_address: addressValue,
+        },
+      };
+
+      if (!favoritesList.some((lists) => lists.name === favorites.name)) {
+        favoritesList.push(favorites);
+      }
+      console.log('favoriteList', favoritesList);
+      const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
+      $favoriteListings?.prepend(favoriteEntry);
+    }
   }
-  console.count();
 });
 
 // render details
