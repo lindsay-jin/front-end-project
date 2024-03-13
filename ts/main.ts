@@ -25,7 +25,7 @@ interface ListingDetails {
   photo: string;
 }
 
-const favoritesList: Favorites[] = [];
+// const favoritesList: Favorites[] = [];
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
 
@@ -55,7 +55,6 @@ const $details = document.querySelector('div[data-view="details"]');
 const $favorites = document.querySelector('div[data-view="favorites"]');
 // view swap
 function viewSwap(view: string): void {
-  console.log(`viewSwap called with view: ${view}`);
   if (view === 'landing') {
     $viewLanding?.classList.remove('hidden');
     $header.classList.add('hidden');
@@ -185,7 +184,6 @@ $form?.addEventListener('submit', (event: Event) => {
 
 // render entry**************************
 function renderEntry(result: any, photo: string): HTMLElement {
-  console.log('result.name', result.name);
   const $listingContainer = document.createElement('div');
   $listingContainer.className = 'listing-container';
 
@@ -203,11 +201,11 @@ function renderEntry(result: any, photo: string): HTMLElement {
   $heartContainer.className = 'heart-container';
 
   const $iHeart = document.createElement('i');
-  if(favoritesList.some((item) => item.name === result.name)){
-    console.log('favoritesList', favoritesList)
-    console.log('result.name', result.name)
+  $iHeart.className = 'fa-regular fa-heart heart-icon';
+
+  if (data.likedEntries.some((item) => item.name === result.name)) {
     $iHeart.className = 'fa-solid fa-heart heart-icon';
-  } else{
+  } else {
     $iHeart.className = 'fa-regular fa-heart heart-icon';
   }
 
@@ -261,7 +259,6 @@ $listing.addEventListener('click', (event) => {
   if ($eventTarget && $eventTarget.tagName === 'IMG') {
     viewSwap('details');
     const closestElement = $eventTarget.closest('.listing-container');
-    console.log('closestElement', closestElement);
     const $nameValue = closestElement?.querySelector('.span-name')
       ?.textContent as string;
     const $addressValue = closestElement?.querySelector('.span-address')
@@ -277,7 +274,6 @@ $listing.addEventListener('click', (event) => {
       $details.innerHTML = '';
     }
     const detailedEntry = renderDetails($listingDetails);
-    console.log('detailedEntry', detailedEntry);
     $details?.prepend(detailedEntry);
   }
 });
@@ -303,7 +299,6 @@ const $favoriteListings = document.querySelector('.favorite-listings');
 $listing.addEventListener('click', (event: Event) => {
   event.preventDefault();
   const $eventTarget = event.target as HTMLElement;
-  console.log('eventTarget', $eventTarget);
   if ($eventTarget && $eventTarget.tagName === 'I') {
     const closestIcon = $eventTarget.closest('i') as HTMLElement;
     closestIcon.classList.toggle('fa-solid');
@@ -313,7 +308,6 @@ $listing.addEventListener('click', (event: Event) => {
       const likedListing = $eventTarget.closest(
         '.listing-container',
       ) as HTMLElement;
-      console.log('likedListing', likedListing);
 
       const photoValue = likedListing
         .querySelector('.listing-image')
@@ -342,21 +336,19 @@ $listing.addEventListener('click', (event: Event) => {
         },
       };
 
-      if (!favoritesList.some((list) => list.name === favorites.name)) {
-       favoritesList.push(favorites);
-       const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
-       $favoriteListings?.prepend(favoriteEntry);
-     }
-      console.log('favoriteList', favoritesList);
+      if (!data.likedEntries.some((list) => list.name === favorites.name)) {
+        data.likedEntries.push(favorites);
+        const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
+        $favoriteListings?.prepend(favoriteEntry);
+      }
     }
   }
 });
 
-//
+// details page clicking on heart
 $details?.addEventListener('click', (event: Event) => {
   event.preventDefault();
   const $eventTarget = event.target as HTMLElement;
-  console.log('eventTarget', $eventTarget);
   if ($eventTarget && $eventTarget.tagName === 'I') {
     const closestIcon = $eventTarget.closest('i') as HTMLElement;
     closestIcon.classList.toggle('fa-solid');
@@ -366,7 +358,6 @@ $details?.addEventListener('click', (event: Event) => {
       const likedListing = $eventTarget.closest(
         '.details-container',
       ) as HTMLElement;
-      console.log('likedListing', likedListing);
 
       const photoValue = likedListing
         .querySelector('.details-image')
@@ -395,12 +386,11 @@ $details?.addEventListener('click', (event: Event) => {
         },
       };
 
-     if (!favoritesList.some((list) => list.name === favorites.name)) {
-       favoritesList.push(favorites);
-       const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
-       $favoriteListings?.prepend(favoriteEntry);
-     }
-      console.log('favoriteList', favoritesList);
+      if (!data.likedEntries.some((list) => list.name === favorites.name)) {
+        data.likedEntries.push(favorites);
+        const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
+        $favoriteListings?.prepend(favoriteEntry);
+      }
     }
   }
 });
@@ -420,11 +410,11 @@ function renderDetails(listing: ListingDetails): HTMLElement {
   const $iconContainer = document.createElement('div');
   $iconContainer.className = 'icon-container';
   const $heartIcon = document.createElement('i');
-  if(favoritesList.includes(listing)){
+  $heartIcon.className = 'fa-regular fa-heart heart-icon';
+
+  if (data.likedEntries.some((item) => item.name === listing.name)) {
     $heartIcon.className = 'fa-solid fa-heart heart-icon';
-    console.log('listing', listing)
-    console.log('favoritesList', favoritesList)
-  }else{
+  } else {
     $heartIcon.className = 'fa-regular fa-heart heart-icon';
   }
 
@@ -550,4 +540,73 @@ function renderDetails(listing: ListingDetails): HTMLElement {
   $editButtonContainer.appendChild($editButton);
 
   return $detailsContainer;
+}
+// render favorites page
+document.addEventListener('DOMContentLoaded', () => {
+  data.likedEntries.forEach((favorite) => {
+    $favoriteListings?.prepend(renderFavorites(favorite));
+  });
+});
+
+// renderFavorites
+function renderFavorites(favorite: Favorites): HTMLElement {
+  const $listingContainer = document.createElement('div');
+  $listingContainer.className = 'listing-container';
+
+  const $listingImgContainer = document.createElement('div');
+  $listingImgContainer.className = 'listing-img-container';
+
+  const $listingImage = document.createElement('img');
+  $listingImage.className = 'listing-image';
+  $listingImage.setAttribute('src', favorite.photo);
+
+  const $rightContainer = document.createElement('div');
+  $rightContainer.className = 'right-container';
+
+  const $heartContainer = document.createElement('div');
+  $heartContainer.className = 'heart-container';
+
+  const $iHeart = document.createElement('i');
+  $iHeart.className = 'fa-solid fa-heart heart-icon';
+
+  const $infoContainer = document.createElement('div');
+  $infoContainer.className = 'info-container';
+
+  const $nameContainer = document.createElement('div');
+  const $addressContainer = document.createElement('div');
+
+  const $listingName = document.createElement('h3');
+  $listingName.className = 'listing-name';
+  $listingName.textContent = 'Name: ';
+
+  const $spanName = document.createElement('span');
+  $spanName.className = 'span-name';
+  $spanName.textContent = favorite.name;
+
+  const $listingAddress = document.createElement('h3');
+  $listingAddress.className = 'listing-address';
+  $listingAddress.textContent = 'Address: ';
+
+  const $spanAddress = document.createElement('span');
+  $spanAddress.className = 'span-address';
+  $spanAddress.textContent = favorite.address;
+
+  $listingContainer.appendChild($listingImgContainer);
+  $listingContainer.appendChild($rightContainer);
+
+  $rightContainer.appendChild($heartContainer);
+  $rightContainer.appendChild($infoContainer);
+
+  $listingImgContainer.appendChild($listingImage);
+  $heartContainer.appendChild($iHeart);
+
+  $infoContainer.appendChild($nameContainer);
+  $infoContainer.appendChild($addressContainer);
+
+  $nameContainer.appendChild($listingName);
+  $nameContainer.appendChild($spanName);
+  $addressContainer.appendChild($listingAddress);
+  $addressContainer.appendChild($spanAddress);
+
+  return $listingContainer;
 }

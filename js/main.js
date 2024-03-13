@@ -1,5 +1,5 @@
-"use strict";
-const favoritesList = [];
+'use strict';
+//const favoritesList: Favorites[] = [];
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
 // search page
@@ -19,428 +19,464 @@ const $details = document.querySelector('div[data-view="details"]');
 const $favorites = document.querySelector('div[data-view="favorites"]');
 // view swap
 function viewSwap(view) {
-    console.log(`viewSwap called with view: ${view}`);
-    if (view === 'landing') {
-        $viewLanding?.classList.remove('hidden');
-        $header.classList.add('hidden');
-        $form.classList.add('hidden');
-        $footer.classList.add('hidden');
-        $details?.classList.add('hidden');
-        $listing.classList.add('hidden');
-        $favorites?.classList.add('hidden');
-    }
-    else if (view === 'form') {
-        $form.classList.remove('hidden');
-        $listing.classList.remove('hidden');
-        $viewLanding?.classList.add('hidden');
-        $header.classList.remove('hidden');
-        $footer.classList.remove('hidden');
-        $details?.classList.add('hidden');
-        $favorites?.classList.add('hidden');
-    }
-    else if (view === 'details') {
-        $details?.classList.remove('hidden');
-        $header.classList.remove('hidden');
-        $footer.classList.remove('hidden');
-        $viewLanding?.classList.add('hidden');
-        $form.classList.add('hidden');
-        $listing.classList.add('hidden');
-        $favorites?.classList.add('hidden');
-    }
-    else if (view === 'favorites') {
-        $favorites?.classList.remove('hidden');
-        $details?.classList.add('hidden');
-        $header.classList.remove('hidden');
-        $footer.classList.remove('hidden');
-        $viewLanding?.classList.add('hidden');
-        $form.classList.add('hidden');
-        $listing.classList.add('hidden');
-    }
+  if (view === 'landing') {
+    $viewLanding?.classList.remove('hidden');
+    $header.classList.add('hidden');
+    $form.classList.add('hidden');
+    $footer.classList.add('hidden');
+    $details?.classList.add('hidden');
+    $listing.classList.add('hidden');
+    $favorites?.classList.add('hidden');
+  } else if (view === 'form') {
+    $form.classList.remove('hidden');
+    $listing.classList.remove('hidden');
+    $viewLanding?.classList.add('hidden');
+    $header.classList.remove('hidden');
+    $footer.classList.remove('hidden');
+    $details?.classList.add('hidden');
+    $favorites?.classList.add('hidden');
+  } else if (view === 'details') {
+    $details?.classList.remove('hidden');
+    $header.classList.remove('hidden');
+    $footer.classList.remove('hidden');
+    $viewLanding?.classList.add('hidden');
+    $form.classList.add('hidden');
+    $listing.classList.add('hidden');
+    $favorites?.classList.add('hidden');
+  } else if (view === 'favorites') {
+    $favorites?.classList.remove('hidden');
+    $details?.classList.add('hidden');
+    $header.classList.remove('hidden');
+    $footer.classList.remove('hidden');
+    $viewLanding?.classList.add('hidden');
+    $form.classList.add('hidden');
+    $listing.classList.add('hidden');
+  }
 }
 $startSearchButton?.addEventListener('click', (event) => {
-    event?.preventDefault();
-    viewSwap('form');
+  event?.preventDefault();
+  viewSwap('form');
 });
 const $actualForm = document.querySelector('form');
 $resetButton?.addEventListener('click', (event) => {
-    event.preventDefault();
-    $actualForm.reset();
+  event.preventDefault();
+  $actualForm.reset();
 });
 const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: 'fsq3fiDFAJR1ZjTM79TGzTzCwyT25vUL31rgJOe5JqZ0sAY=',
-    },
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: 'fsq3fiDFAJR1ZjTM79TGzTzCwyT25vUL31rgJOe5JqZ0sAY=',
+  },
 };
 async function fetchPhotoId(id) {
-    try {
-        const response = await fetch(`https://api.foursquare.com/v3/places/${id}/photos`, options);
-        const data = await response.json();
-        if (data && data.length > 0) {
-            const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
-            return firstPhotoUrl;
-        }
-        else {
-            throw new Error('No photos available.');
-        }
+  try {
+    const response = await fetch(
+      `https://api.foursquare.com/v3/places/${id}/photos`,
+      options,
+    );
+    const data = await response.json();
+    if (data && data.length > 0) {
+      const firstPhotoUrl = data[0].prefix + '300x300' + data[0].suffix;
+      return firstPhotoUrl;
+    } else {
+      throw new Error('No photos available.');
     }
-    catch (error) {
-        console.log('Failed to fetch photo ID:', error);
-        throw error;
-    }
+  } catch (error) {
+    console.log('Failed to fetch photo ID:', error);
+    throw error;
+  }
 }
-async function fetchInfo({ keyword, location, open, show, sortBy, }) {
-    try {
-        const response = await fetch(`https://api.foursquare.com/v3/places/search?query=${keyword}&near=${location}&open_now=${open}&sort=${sortBy}&limit=${show}`, options);
-        const data = await response.json();
-        if (!data) {
-            throw new Error('Nothing found within the search parameter.');
-        }
-        data.results.forEach(async (result) => {
-            const photo = await fetchPhotoId(result.fsq_id); // the photo for each place
-            const entryElement = renderEntry(result, photo); // the rendered DOM tree
-            $listing.prepend(entryElement);
-        });
+async function fetchInfo({ keyword, location, open, show, sortBy }) {
+  try {
+    const response = await fetch(
+      `https://api.foursquare.com/v3/places/search?query=${keyword}&near=${location}&open_now=${open}&sort=${sortBy}&limit=${show}`,
+      options,
+    );
+    const data = await response.json();
+    if (!data) {
+      throw new Error('Nothing found within the search parameter.');
     }
-    catch (error) {
-        console.log('Failed to fetch obj:', error);
-    }
+    data.results.forEach(async (result) => {
+      const photo = await fetchPhotoId(result.fsq_id); // the photo for each place
+      const entryElement = renderEntry(result, photo); // the rendered DOM tree
+      $listing.prepend(entryElement);
+    });
+  } catch (error) {
+    console.log('Failed to fetch obj:', error);
+  }
 }
 // submit **************************************
 $form?.addEventListener('submit', (event) => {
-    event?.preventDefault();
-    while ($listing.firstChild) {
-        $listing.removeChild($listing.firstChild);
-    }
-    const locationValue = $location.value;
-    const keywordValue = $keyword.value;
-    const openValue = $open.value;
-    const showValue = Number($show.value);
-    const sortValue = $sort.value;
-    const obj = {
-        location: locationValue || '',
-        keyword: keywordValue || '',
-        open: openValue ? Boolean(openValue) : true,
-        show: showValue || 10,
-        sortBy: sortValue || 'relevance',
-    };
-    fetchInfo(obj);
+  event?.preventDefault();
+  while ($listing.firstChild) {
+    $listing.removeChild($listing.firstChild);
+  }
+  const locationValue = $location.value;
+  const keywordValue = $keyword.value;
+  const openValue = $open.value;
+  const showValue = Number($show.value);
+  const sortValue = $sort.value;
+  const obj = {
+    location: locationValue || '',
+    keyword: keywordValue || '',
+    open: openValue ? Boolean(openValue) : true,
+    show: showValue || 10,
+    sortBy: sortValue || 'relevance',
+  };
+  fetchInfo(obj);
 });
 // render entry**************************
 function renderEntry(result, photo) {
-    console.log('result.name', result.name);
-    const $listingContainer = document.createElement('div');
-    $listingContainer.className = 'listing-container';
-    const $listingImgContainer = document.createElement('div');
-    $listingImgContainer.className = 'listing-img-container';
-    const $listingImage = document.createElement('img');
-    $listingImage.className = 'listing-image';
-    $listingImage.setAttribute('src', photo);
-    const $rightContainer = document.createElement('div');
-    $rightContainer.className = 'right-container';
-    const $heartContainer = document.createElement('div');
-    $heartContainer.className = 'heart-container';
-    const $iHeart = document.createElement('i');
-    if (favoritesList.some((item) => item.name === result.name)) {
-        console.log('favoritesList', favoritesList);
-        console.log('result.name', result.name);
-        $iHeart.className = 'fa-solid fa-heart heart-icon';
-    }
-    else {
-        $iHeart.className = 'fa-regular fa-heart heart-icon';
-    }
-    const $infoContainer = document.createElement('div');
-    $infoContainer.className = 'info-container';
-    const $nameContainer = document.createElement('div');
-    const $addressContainer = document.createElement('div');
-    const $listingName = document.createElement('h3');
-    $listingName.className = 'listing-name';
-    $listingName.textContent = 'Name: ';
-    const $spanName = document.createElement('span');
-    $spanName.className = 'span-name';
-    $spanName.textContent = result.name;
-    const $listingAddress = document.createElement('h3');
-    $listingAddress.className = 'listing-address';
-    $listingAddress.textContent = 'Address: ';
-    const $spanAddress = document.createElement('span');
-    $spanAddress.className = 'span-address';
-    $spanAddress.textContent = result.location.formatted_address;
-    $listingContainer.appendChild($listingImgContainer);
-    $listingContainer.appendChild($rightContainer);
-    $rightContainer.appendChild($heartContainer);
-    $rightContainer.appendChild($infoContainer);
-    $listingImgContainer.appendChild($listingImage);
-    $heartContainer.appendChild($iHeart);
-    $infoContainer.appendChild($nameContainer);
-    $infoContainer.appendChild($addressContainer);
-    $nameContainer.appendChild($listingName);
-    $nameContainer.appendChild($spanName);
-    $addressContainer.appendChild($listingAddress);
-    $addressContainer.appendChild($spanAddress);
-    return $listingContainer;
+  const $listingContainer = document.createElement('div');
+  $listingContainer.className = 'listing-container';
+  const $listingImgContainer = document.createElement('div');
+  $listingImgContainer.className = 'listing-img-container';
+  const $listingImage = document.createElement('img');
+  $listingImage.className = 'listing-image';
+  $listingImage.setAttribute('src', photo);
+  const $rightContainer = document.createElement('div');
+  $rightContainer.className = 'right-container';
+  const $heartContainer = document.createElement('div');
+  $heartContainer.className = 'heart-container';
+  const $iHeart = document.createElement('i');
+  $iHeart.className = 'fa-regular fa-heart heart-icon';
+  if (data.likedEntries.some((item) => item.name === result.name)) {
+    $iHeart.className = 'fa-solid fa-heart heart-icon';
+  } else {
+    $iHeart.className = 'fa-regular fa-heart heart-icon';
+  }
+  const $infoContainer = document.createElement('div');
+  $infoContainer.className = 'info-container';
+  const $nameContainer = document.createElement('div');
+  const $addressContainer = document.createElement('div');
+  const $listingName = document.createElement('h3');
+  $listingName.className = 'listing-name';
+  $listingName.textContent = 'Name: ';
+  const $spanName = document.createElement('span');
+  $spanName.className = 'span-name';
+  $spanName.textContent = result.name;
+  const $listingAddress = document.createElement('h3');
+  $listingAddress.className = 'listing-address';
+  $listingAddress.textContent = 'Address: ';
+  const $spanAddress = document.createElement('span');
+  $spanAddress.className = 'span-address';
+  $spanAddress.textContent = result.location.formatted_address;
+  $listingContainer.appendChild($listingImgContainer);
+  $listingContainer.appendChild($rightContainer);
+  $rightContainer.appendChild($heartContainer);
+  $rightContainer.appendChild($infoContainer);
+  $listingImgContainer.appendChild($listingImage);
+  $heartContainer.appendChild($iHeart);
+  $infoContainer.appendChild($nameContainer);
+  $infoContainer.appendChild($addressContainer);
+  $nameContainer.appendChild($listingName);
+  $nameContainer.appendChild($spanName);
+  $addressContainer.appendChild($listingAddress);
+  $addressContainer.appendChild($spanAddress);
+  return $listingContainer;
 }
 // click on image to show details
 $listing.addEventListener('click', (event) => {
-    event.preventDefault();
-    const $eventTarget = event.target;
-    if ($eventTarget && $eventTarget.tagName === 'IMG') {
-        viewSwap('details');
-        const closestElement = $eventTarget.closest('.listing-container');
-        console.log('closestElement', closestElement);
-        const $nameValue = closestElement?.querySelector('.span-name')
-            ?.textContent;
-        const $addressValue = closestElement?.querySelector('.span-address')
-            ?.textContent;
-        const photoUrl = $eventTarget.getAttribute('src');
-        const $listingDetails = {
-            name: $nameValue,
-            address: $addressValue,
-            photo: photoUrl,
-        };
-        if ($details) {
-            $details.innerHTML = '';
-        }
-        const detailedEntry = renderDetails($listingDetails);
-        console.log('detailedEntry', detailedEntry);
-        $details?.prepend(detailedEntry);
+  event.preventDefault();
+  const $eventTarget = event.target;
+  if ($eventTarget && $eventTarget.tagName === 'IMG') {
+    viewSwap('details');
+    const closestElement = $eventTarget.closest('.listing-container');
+    const $nameValue = closestElement?.querySelector('.span-name')?.textContent;
+    const $addressValue =
+      closestElement?.querySelector('.span-address')?.textContent;
+    const photoUrl = $eventTarget.getAttribute('src');
+    const $listingDetails = {
+      name: $nameValue,
+      address: $addressValue,
+      photo: photoUrl,
+    };
+    if ($details) {
+      $details.innerHTML = '';
     }
+    const detailedEntry = renderDetails($listingDetails);
+    $details?.prepend(detailedEntry);
+  }
 });
 // nav bar
 const $navSearchIcon = document.querySelector('.nav-search-icon');
 $navSearchIcon.addEventListener('click', (event) => {
-    event.preventDefault();
-    viewSwap('form');
+  event.preventDefault();
+  viewSwap('form');
 });
 const $navHeartIcon = document.querySelector('.nav-heart-icon');
 $navHeartIcon.addEventListener('click', (event) => {
-    event.preventDefault();
-    viewSwap('favorites');
+  event.preventDefault();
+  viewSwap('favorites');
 });
 const $favoriteListings = document.querySelector('.favorite-listings');
 // adding to the favorites page***************************
 $listing.addEventListener('click', (event) => {
-    event.preventDefault();
-    const $eventTarget = event.target;
-    console.log('eventTarget', $eventTarget);
-    if ($eventTarget && $eventTarget.tagName === 'I') {
-        const closestIcon = $eventTarget.closest('i');
-        closestIcon.classList.toggle('fa-solid');
-        closestIcon.classList.toggle('fa-regular');
-        if ($eventTarget.classList.contains('fa-solid')) {
-            const likedListing = $eventTarget.closest('.listing-container');
-            console.log('likedListing', likedListing);
-            const photoValue = likedListing
-                .querySelector('.listing-image')
-                ?.getAttribute('src');
-            const nameValue = likedListing.querySelector('.span-name')
-                ?.textContent;
-            const addressValue = likedListing.querySelector('.span-address')
-                ?.textContent;
-            const favorites = {
-                photo: photoValue,
-                name: nameValue,
-                address: addressValue,
-                chair: 'selectOne',
-                wifi: 'selectOne',
-                temp: 'selectOne',
-                dog: 'selectOne',
-                noise: 'selectOne',
-                bathroom: 'selectOne',
-            };
-            const result = {
-                name: nameValue,
-                location: {
-                    formatted_address: addressValue,
-                },
-            };
-            if (!favoritesList.some((list) => list.name === favorites.name)) {
-                favoritesList.push(favorites);
-                const favoriteEntry = renderEntry(result, photoValue);
-                $favoriteListings?.prepend(favoriteEntry);
-            }
-            console.log('favoriteList', favoritesList);
-        }
+  event.preventDefault();
+  const $eventTarget = event.target;
+  if ($eventTarget && $eventTarget.tagName === 'I') {
+    const closestIcon = $eventTarget.closest('i');
+    closestIcon.classList.toggle('fa-solid');
+    closestIcon.classList.toggle('fa-regular');
+    if ($eventTarget.classList.contains('fa-solid')) {
+      const likedListing = $eventTarget.closest('.listing-container');
+      const photoValue = likedListing
+        .querySelector('.listing-image')
+        ?.getAttribute('src');
+      const nameValue = likedListing.querySelector('.span-name')?.textContent;
+      const addressValue =
+        likedListing.querySelector('.span-address')?.textContent;
+      const favorites = {
+        photo: photoValue,
+        name: nameValue,
+        address: addressValue,
+        chair: 'selectOne',
+        wifi: 'selectOne',
+        temp: 'selectOne',
+        dog: 'selectOne',
+        noise: 'selectOne',
+        bathroom: 'selectOne',
+      };
+      const result = {
+        name: nameValue,
+        location: {
+          formatted_address: addressValue,
+        },
+      };
+      if (!data.likedEntries.some((list) => list.name === favorites.name)) {
+        data.likedEntries.push(favorites);
+        const favoriteEntry = renderEntry(result, photoValue);
+        $favoriteListings?.prepend(favoriteEntry);
+      }
     }
+  }
 });
-//
+//details page clicking on heart
 $details?.addEventListener('click', (event) => {
-    event.preventDefault();
-    const $eventTarget = event.target;
-    console.log('eventTarget', $eventTarget);
-    if ($eventTarget && $eventTarget.tagName === 'I') {
-        const closestIcon = $eventTarget.closest('i');
-        closestIcon.classList.toggle('fa-solid');
-        closestIcon.classList.toggle('fa-regular');
-        if ($eventTarget.classList.contains('fa-solid')) {
-            const likedListing = $eventTarget.closest('.details-container');
-            console.log('likedListing', likedListing);
-            const photoValue = likedListing
-                .querySelector('.details-image')
-                ?.getAttribute('src');
-            const nameValue = likedListing.querySelector('.details-span-name')
-                ?.textContent;
-            const addressValue = likedListing.querySelector('.details-span-address')
-                ?.textContent;
-            const favorites = {
-                photo: photoValue,
-                name: nameValue,
-                address: addressValue,
-                chair: 'selectOne',
-                wifi: 'selectOne',
-                temp: 'selectOne',
-                dog: 'selectOne',
-                noise: 'selectOne',
-                bathroom: 'selectOne',
-            };
-            const result = {
-                name: nameValue,
-                location: {
-                    formatted_address: addressValue,
-                },
-            };
-            if (!favoritesList.some((list) => list.name === favorites.name)) {
-                favoritesList.push(favorites);
-                const favoriteEntry = renderEntry(result, photoValue);
-                $favoriteListings?.prepend(favoriteEntry);
-            }
-            console.log('favoriteList', favoritesList);
-        }
+  event.preventDefault();
+  const $eventTarget = event.target;
+  if ($eventTarget && $eventTarget.tagName === 'I') {
+    const closestIcon = $eventTarget.closest('i');
+    closestIcon.classList.toggle('fa-solid');
+    closestIcon.classList.toggle('fa-regular');
+    if ($eventTarget.classList.contains('fa-solid')) {
+      const likedListing = $eventTarget.closest('.details-container');
+      const photoValue = likedListing
+        .querySelector('.details-image')
+        ?.getAttribute('src');
+      const nameValue =
+        likedListing.querySelector('.details-span-name')?.textContent;
+      const addressValue = likedListing.querySelector(
+        '.details-span-address',
+      )?.textContent;
+      const favorites = {
+        photo: photoValue,
+        name: nameValue,
+        address: addressValue,
+        chair: 'selectOne',
+        wifi: 'selectOne',
+        temp: 'selectOne',
+        dog: 'selectOne',
+        noise: 'selectOne',
+        bathroom: 'selectOne',
+      };
+      const result = {
+        name: nameValue,
+        location: {
+          formatted_address: addressValue,
+        },
+      };
+      if (!data.likedEntries.some((list) => list.name === favorites.name)) {
+        data.likedEntries.push(favorites);
+        const favoriteEntry = renderEntry(result, photoValue);
+        $favoriteListings?.prepend(favoriteEntry);
+      }
     }
+  }
 });
 // render details
 function renderDetails(listing) {
-    const $detailsContainer = document.createElement('div');
-    $detailsContainer.className = 'details-container';
-    // left side
-    const $detailsLeft = document.createElement('div');
-    $detailsLeft.className = 'details-left';
-    const $detailsImgContainer = document.createElement('div');
-    $detailsImgContainer.className = 'details-img-container';
-    const $detailsImage = document.createElement('img');
-    $detailsImage.className = 'details-image';
-    $detailsImage.setAttribute('src', listing.photo);
-    const $iconContainer = document.createElement('div');
-    $iconContainer.className = 'icon-container';
-    const $heartIcon = document.createElement('i');
-    if (favoritesList.includes(listing)) {
-        $heartIcon.className = 'fa-solid fa-heart heart-icon';
-        console.log('listing', listing);
-        console.log('favoritesList', favoritesList);
-    }
-    else {
-        $heartIcon.className = 'fa-regular fa-heart heart-icon';
-    }
-    $detailsContainer.appendChild($detailsLeft);
-    $detailsLeft.appendChild($detailsImgContainer);
-    $detailsLeft.appendChild($iconContainer);
-    $detailsImgContainer.appendChild($detailsImage);
-    $iconContainer.appendChild($heartIcon);
-    // right side
-    const $detailsRight = document.createElement('div');
-    $detailsRight.className = 'details-right';
-    const $detailsInfoContainer = document.createElement('div');
-    $detailsInfoContainer.className = 'details-info-container';
-    const $nameTitle = document.createElement('h3');
-    $nameTitle.textContent = 'Name: ';
-    const $nameInfo = document.createElement('span');
-    $nameInfo.className = 'details-span-name';
-    $nameInfo.textContent = listing.name;
-    const $addressTitle = document.createElement('h3');
-    $addressTitle.textContent = 'Address: ';
-    const $addressInfo = document.createElement('span');
-    $addressInfo.className = 'details-span-address';
-    $addressInfo.textContent = listing.address;
-    $detailsContainer.appendChild($detailsRight);
-    $detailsRight.appendChild($detailsInfoContainer);
-    $detailsInfoContainer.appendChild($nameTitle);
-    $detailsInfoContainer.appendChild($nameInfo);
-    $detailsInfoContainer.appendChild($addressTitle);
-    $detailsInfoContainer.appendChild($addressInfo);
-    // details-extra: chair
-    const $detailsExtra = document.createElement('div');
-    $detailsExtra.className = 'details-extra';
-    const $chairLabel = document.createElement('label');
-    $chairLabel.setAttribute('for', 'chair');
-    $chairLabel.textContent = 'Comfy Chair: ';
-    const $chairSelect = document.createElement('select');
-    $chairSelect.setAttribute('name', 'chair');
-    $chairSelect.setAttribute('id', 'chair');
-    $chairSelect.disabled = true; // Disables the select element
-    const $chairOptionSelectOne = document.createElement('option');
-    $chairOptionSelectOne.setAttribute('value', 'selectOne');
-    $chairOptionSelectOne.textContent = 'Select One';
-    const $chairOptionYes = document.createElement('option');
-    $chairOptionYes.setAttribute('value', 'yes');
-    $chairOptionYes.textContent = 'YES';
-    const $chairOptionNo = document.createElement('option');
-    $chairOptionNo.setAttribute('value', 'no');
-    $chairOptionNo.textContent = 'NO';
-    $detailsRight.appendChild($detailsExtra);
-    $detailsExtra.appendChild($chairLabel);
-    $detailsExtra.appendChild($chairSelect);
-    $chairSelect.appendChild($chairOptionSelectOne);
-    $chairSelect.appendChild($chairOptionYes);
-    $chairSelect.appendChild($chairOptionNo);
-    // wifi
-    const $wifiLabel = document.createElement('label');
-    $wifiLabel.setAttribute('for', 'wifi');
-    $wifiLabel.textContent = 'Free Wifi: ';
-    const $wifiSelect = document.createElement('select');
-    $wifiSelect.setAttribute('name', 'wifi');
-    $wifiSelect.setAttribute('id', 'wifi');
-    $wifiSelect.disabled = true;
-    const $wifiOptions = [
-        { value: 'selectOne', text: 'Select One' },
-        { value: 'yes', text: 'YES' },
-        { value: 'no', text: 'NO' },
-    ];
-    $wifiOptions.forEach((opt) => {
-        const $option = document.createElement('option');
-        $option.value = opt.value;
-        $option.textContent = opt.text;
-        $wifiSelect.appendChild($option);
-    });
-    $detailsExtra.appendChild($wifiLabel);
-    $detailsExtra.appendChild($wifiSelect);
-    // temp
-    const $tempLabel = document.createElement('label');
-    $tempLabel.setAttribute('for', 'temp');
-    $tempLabel.textContent = 'Temperature';
-    const $tempSelect = document.createElement('select');
-    $tempSelect.setAttribute('name', 'temp');
-    $tempSelect.setAttribute('id', 'temp');
-    $tempSelect.disabled = true;
-    const $tempOptionSelectOne = document.createElement('option');
-    $tempOptionSelectOne.value = 'selectOne';
-    $tempOptionSelectOne.textContent = 'Select One';
-    const $optionFreezing = document.createElement('option');
-    $optionFreezing.value = 'freezing';
-    $optionFreezing.textContent = 'Freezing!';
-    const $optionCool = document.createElement('option');
-    $optionCool.value = 'cool';
-    $optionCool.textContent = 'Cool, bring a jacket';
-    const $optionPerfect = document.createElement('option');
-    $optionPerfect.value = 'perfect';
-    $optionPerfect.textContent = 'Perfect';
-    const $optionHot = document.createElement('option');
-    $optionHot.value = 'hot';
-    $optionHot.textContent = 'Too hot!';
-    $detailsExtra.appendChild($tempLabel);
-    $detailsExtra.appendChild($tempSelect);
-    $tempSelect.appendChild($tempOptionSelectOne);
-    $tempSelect.appendChild($optionFreezing);
-    $tempSelect.appendChild($optionCool);
-    $tempSelect.appendChild($optionPerfect);
-    $tempSelect.appendChild($optionHot);
-    // edit button
-    const $editButtonContainer = document.createElement('div');
-    $editButtonContainer.className = 'edit-button-container';
-    const $editButton = document.createElement('button');
-    $editButton.className = 'edit-button';
-    $editButton.type = 'button';
-    $editButton.textContent = 'EDIT';
-    $detailsExtra.appendChild($editButtonContainer);
-    $editButtonContainer.appendChild($editButton);
-    return $detailsContainer;
+  const $detailsContainer = document.createElement('div');
+  $detailsContainer.className = 'details-container';
+  // left side
+  const $detailsLeft = document.createElement('div');
+  $detailsLeft.className = 'details-left';
+  const $detailsImgContainer = document.createElement('div');
+  $detailsImgContainer.className = 'details-img-container';
+  const $detailsImage = document.createElement('img');
+  $detailsImage.className = 'details-image';
+  $detailsImage.setAttribute('src', listing.photo);
+  const $iconContainer = document.createElement('div');
+  $iconContainer.className = 'icon-container';
+  const $heartIcon = document.createElement('i');
+  $heartIcon.className = 'fa-regular fa-heart heart-icon';
+  if (data.likedEntries.some((item) => item.name === listing.name)) {
+    $heartIcon.className = 'fa-solid fa-heart heart-icon';
+  } else {
+    $heartIcon.className = 'fa-regular fa-heart heart-icon';
+  }
+  $detailsContainer.appendChild($detailsLeft);
+  $detailsLeft.appendChild($detailsImgContainer);
+  $detailsLeft.appendChild($iconContainer);
+  $detailsImgContainer.appendChild($detailsImage);
+  $iconContainer.appendChild($heartIcon);
+  // right side
+  const $detailsRight = document.createElement('div');
+  $detailsRight.className = 'details-right';
+  const $detailsInfoContainer = document.createElement('div');
+  $detailsInfoContainer.className = 'details-info-container';
+  const $nameTitle = document.createElement('h3');
+  $nameTitle.textContent = 'Name: ';
+  const $nameInfo = document.createElement('span');
+  $nameInfo.className = 'details-span-name';
+  $nameInfo.textContent = listing.name;
+  const $addressTitle = document.createElement('h3');
+  $addressTitle.textContent = 'Address: ';
+  const $addressInfo = document.createElement('span');
+  $addressInfo.className = 'details-span-address';
+  $addressInfo.textContent = listing.address;
+  $detailsContainer.appendChild($detailsRight);
+  $detailsRight.appendChild($detailsInfoContainer);
+  $detailsInfoContainer.appendChild($nameTitle);
+  $detailsInfoContainer.appendChild($nameInfo);
+  $detailsInfoContainer.appendChild($addressTitle);
+  $detailsInfoContainer.appendChild($addressInfo);
+  // details-extra: chair
+  const $detailsExtra = document.createElement('div');
+  $detailsExtra.className = 'details-extra';
+  const $chairLabel = document.createElement('label');
+  $chairLabel.setAttribute('for', 'chair');
+  $chairLabel.textContent = 'Comfy Chair: ';
+  const $chairSelect = document.createElement('select');
+  $chairSelect.setAttribute('name', 'chair');
+  $chairSelect.setAttribute('id', 'chair');
+  $chairSelect.disabled = true; // Disables the select element
+  const $chairOptionSelectOne = document.createElement('option');
+  $chairOptionSelectOne.setAttribute('value', 'selectOne');
+  $chairOptionSelectOne.textContent = 'Select One';
+  const $chairOptionYes = document.createElement('option');
+  $chairOptionYes.setAttribute('value', 'yes');
+  $chairOptionYes.textContent = 'YES';
+  const $chairOptionNo = document.createElement('option');
+  $chairOptionNo.setAttribute('value', 'no');
+  $chairOptionNo.textContent = 'NO';
+  $detailsRight.appendChild($detailsExtra);
+  $detailsExtra.appendChild($chairLabel);
+  $detailsExtra.appendChild($chairSelect);
+  $chairSelect.appendChild($chairOptionSelectOne);
+  $chairSelect.appendChild($chairOptionYes);
+  $chairSelect.appendChild($chairOptionNo);
+  // wifi
+  const $wifiLabel = document.createElement('label');
+  $wifiLabel.setAttribute('for', 'wifi');
+  $wifiLabel.textContent = 'Free Wifi: ';
+  const $wifiSelect = document.createElement('select');
+  $wifiSelect.setAttribute('name', 'wifi');
+  $wifiSelect.setAttribute('id', 'wifi');
+  $wifiSelect.disabled = true;
+  const $wifiOptions = [
+    { value: 'selectOne', text: 'Select One' },
+    { value: 'yes', text: 'YES' },
+    { value: 'no', text: 'NO' },
+  ];
+  $wifiOptions.forEach((opt) => {
+    const $option = document.createElement('option');
+    $option.value = opt.value;
+    $option.textContent = opt.text;
+    $wifiSelect.appendChild($option);
+  });
+  $detailsExtra.appendChild($wifiLabel);
+  $detailsExtra.appendChild($wifiSelect);
+  // temp
+  const $tempLabel = document.createElement('label');
+  $tempLabel.setAttribute('for', 'temp');
+  $tempLabel.textContent = 'Temperature';
+  const $tempSelect = document.createElement('select');
+  $tempSelect.setAttribute('name', 'temp');
+  $tempSelect.setAttribute('id', 'temp');
+  $tempSelect.disabled = true;
+  const $tempOptionSelectOne = document.createElement('option');
+  $tempOptionSelectOne.value = 'selectOne';
+  $tempOptionSelectOne.textContent = 'Select One';
+  const $optionFreezing = document.createElement('option');
+  $optionFreezing.value = 'freezing';
+  $optionFreezing.textContent = 'Freezing!';
+  const $optionCool = document.createElement('option');
+  $optionCool.value = 'cool';
+  $optionCool.textContent = 'Cool, bring a jacket';
+  const $optionPerfect = document.createElement('option');
+  $optionPerfect.value = 'perfect';
+  $optionPerfect.textContent = 'Perfect';
+  const $optionHot = document.createElement('option');
+  $optionHot.value = 'hot';
+  $optionHot.textContent = 'Too hot!';
+  $detailsExtra.appendChild($tempLabel);
+  $detailsExtra.appendChild($tempSelect);
+  $tempSelect.appendChild($tempOptionSelectOne);
+  $tempSelect.appendChild($optionFreezing);
+  $tempSelect.appendChild($optionCool);
+  $tempSelect.appendChild($optionPerfect);
+  $tempSelect.appendChild($optionHot);
+  // edit button
+  const $editButtonContainer = document.createElement('div');
+  $editButtonContainer.className = 'edit-button-container';
+  const $editButton = document.createElement('button');
+  $editButton.className = 'edit-button';
+  $editButton.type = 'button';
+  $editButton.textContent = 'EDIT';
+  $detailsExtra.appendChild($editButtonContainer);
+  $editButtonContainer.appendChild($editButton);
+  return $detailsContainer;
+}
+// render favorites page
+document.addEventListener('DOMContentLoaded', () => {
+  data.likedEntries.forEach((favorite) => {
+    $favoriteListings?.prepend(renderFavorites(favorite));
+  });
+});
+//renderFavorites
+function renderFavorites(favorite) {
+  const $listingContainer = document.createElement('div');
+  $listingContainer.className = 'listing-container';
+  const $listingImgContainer = document.createElement('div');
+  $listingImgContainer.className = 'listing-img-container';
+  const $listingImage = document.createElement('img');
+  $listingImage.className = 'listing-image';
+  $listingImage.setAttribute('src', favorite.photo);
+  const $rightContainer = document.createElement('div');
+  $rightContainer.className = 'right-container';
+  const $heartContainer = document.createElement('div');
+  $heartContainer.className = 'heart-container';
+  const $iHeart = document.createElement('i');
+  $iHeart.className = 'fa-solid fa-heart heart-icon';
+  const $infoContainer = document.createElement('div');
+  $infoContainer.className = 'info-container';
+  const $nameContainer = document.createElement('div');
+  const $addressContainer = document.createElement('div');
+  const $listingName = document.createElement('h3');
+  $listingName.className = 'listing-name';
+  $listingName.textContent = 'Name: ';
+  const $spanName = document.createElement('span');
+  $spanName.className = 'span-name';
+  $spanName.textContent = favorite.name;
+  const $listingAddress = document.createElement('h3');
+  $listingAddress.className = 'listing-address';
+  $listingAddress.textContent = 'Address: ';
+  const $spanAddress = document.createElement('span');
+  $spanAddress.className = 'span-address';
+  $spanAddress.textContent = favorite.address;
+  $listingContainer.appendChild($listingImgContainer);
+  $listingContainer.appendChild($rightContainer);
+  $rightContainer.appendChild($heartContainer);
+  $rightContainer.appendChild($infoContainer);
+  $listingImgContainer.appendChild($listingImage);
+  $heartContainer.appendChild($iHeart);
+  $infoContainer.appendChild($nameContainer);
+  $infoContainer.appendChild($addressContainer);
+  $nameContainer.appendChild($listingName);
+  $nameContainer.appendChild($spanName);
+  $addressContainer.appendChild($listingAddress);
+  $addressContainer.appendChild($spanAddress);
+  return $listingContainer;
 }
