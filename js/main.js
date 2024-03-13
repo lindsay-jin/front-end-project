@@ -261,3 +261,123 @@ $detailsLeft.addEventListener('click', (event) => {
     }
     console.count();
 });
+//render details
+function renderDetails() {
+    //left side
+    const $detailsLeft = document.createElement('div');
+    $detailsLeft.className = 'details-left';
+    const $detailsImgContainer = document.createElement('div');
+    $detailsImgContainer.className = 'details-img-container';
+    const $detailsImage = document.createElement('img');
+    $detailsImage.className = 'details-image';
+    const $iconContainer = document.createElement('div');
+    $iconContainer.className = 'icon-container';
+    const $heartIcon = document.createElement('i');
+    $heartIcon.className = 'fa-regular fa-heart heart-icon';
+    $detailsLeft.appendChild($detailsImgContainer);
+    $detailsLeft.appendChild($iconContainer);
+    $detailsImgContainer.appendChild($detailsImage);
+    $iconContainer.appendChild($heartIcon);
+    //right side
+    const $detailsRight = document.createElement('div');
+    $detailsRight.className = 'details-right';
+    const $detailsInfoContainer = document.createElement('div');
+    $detailsInfoContainer.className = 'details-info-container';
+    const $nameTitle = document.createElement('h3');
+    $nameTitle.textContent = 'Name: ';
+    const $nameInfo = document.createElement('span');
+    $nameInfo.className = 'details-span-name';
+    const $addressTitle = document.createElement('h3');
+    $addressTitle.textContent = 'Address: ';
+    const $addressInfo = document.createElement('span');
+    $addressInfo.className = 'details-span-address';
+    $detailsRight.appendChild($detailsInfoContainer);
+    $detailsInfoContainer.appendChild($nameTitle);
+    $detailsInfoContainer.appendChild($nameInfo);
+    $detailsInfoContainer.appendChild($addressTitle);
+    $detailsInfoContainer.appendChild($addressInfo);
+    //details-extra: chair
+    const $detailsExtra = document.createElement('div');
+    $detailsExtra.className = 'details-extra';
+    const $chairLabel = document.createElement('label');
+    $chairLabel.setAttribute('for', 'chair');
+    $chairLabel.textContent = 'Comfy Chair: ';
+    const $chairSelect = document.createElement('select');
+    $chairSelect.setAttribute('name', 'chair');
+    $chairSelect.setAttribute('id', 'chair');
+    $chairSelect.disabled = true; // Disables the select element
+    const $chairOptionSelectOne = document.createElement('option');
+    $chairOptionSelectOne.setAttribute('value', 'selectOne');
+    $chairOptionSelectOne.textContent = 'Select One';
+    const $chairOptionYes = document.createElement('option');
+    $chairOptionYes.setAttribute('value', 'yes');
+    $chairOptionYes.textContent = 'YES';
+    const $chairOptionNo = document.createElement('option');
+    $chairOptionNo.setAttribute('value', 'no');
+    $chairOptionNo.textContent = 'NO';
+    $detailsRight.appendChild($detailsExtra);
+    $detailsExtra.appendChild($chairLabel);
+    $detailsExtra.appendChild($chairSelect);
+    $chairSelect.appendChild($chairOptionSelectOne);
+    $chairSelect.appendChild($chairOptionYes);
+    $chairSelect.appendChild($chairOptionNo);
+    //wifi
+    const $wifiLabel = document.createElement('label');
+    $wifiLabel.setAttribute('for', 'wifi');
+    $wifiLabel.textContent = 'Free Wifi: ';
+    const $wifiSelect = document.createElement('select');
+    $wifiSelect.setAttribute('name', 'wifi');
+    $wifiSelect.setAttribute('id', 'wifi');
+    $wifiSelect.disabled = true;
+    const $wifiOptions = [
+        { value: 'selectOne', text: 'Select One' },
+        { value: 'yes', text: 'YES' },
+        { value: 'no', text: 'NO' },
+    ];
+    $wifiOptions.forEach(opt => {
+        const $option = document.createElement('option');
+        $option.value = opt.value;
+        $option.textContent = opt.text;
+        $wifiSelect.appendChild($option);
+    });
+    $detailsExtra.appendChild($wifiLabel);
+    $detailsExtra.appendChild($wifiSelect);
+    //temp
+    const $tempLabel = document.createElement('label');
+    $tempLabel.setAttribute('for', 'temp');
+    $tempLabel.textContent = 'Temperature';
+    const $tempSelect = document.createElement('select');
+    $tempSelect.setAttribute('name', 'temp');
+    $tempSelect.setAttribute('id', 'temp');
+    $tempSelect.disabled = true;
+    const $tempOptionSelectOne = document.createElement('option');
+    $tempOptionSelectOne.value = 'selectOne';
+    $tempOptionSelectOne.textContent = 'Select One';
+    const $optionFreezing = document.createElement('option');
+    $optionFreezing.value = 'freezing';
+    $optionFreezing.textContent = 'Freezing!';
+    const $optionCool = document.createElement('option');
+    $optionCool.value = 'cool';
+    $optionCool.textContent = 'Cool, bring a jacket';
+    const $optionPerfect = document.createElement('option');
+    $optionPerfect.value = 'perfect';
+    $optionPerfect.textContent = 'Perfect';
+    const $optionHot = document.createElement('option');
+    $optionHot.value = 'hot';
+    $optionHot.textContent = 'Too hot!';
+    $detailsExtra.appendChild($tempLabel);
+    $detailsExtra.appendChild($tempSelect);
+    $tempSelect.appendChild($tempOptionSelectOne);
+    $tempSelect.appendChild($optionFreezing);
+    $tempSelect.appendChild($optionCool);
+    $tempSelect.appendChild($optionPerfect);
+    $tempSelect.appendChild($optionHot);
+    //edit button
+    const $editButtonContainer = document.createElement('div');
+    $editButtonContainer.className = 'edit-button-container';
+    const $editButton = document.createElement('button');
+    $editButton.className = 'edit-button';
+    $editButton.type = 'button';
+    $detailsExtra.appendChild($editButtonContainer);
+    $editButtonContainer.appendChild($editButton);
+}
