@@ -483,3 +483,27 @@ function renderFavorites(favorite) {
     $addressContainer.appendChild($spanAddress);
     return $listingContainer;
 }
+// details page from favorites page
+$favoriteListings?.addEventListener('click', (event) => {
+    event.preventDefault();
+    const $eventTarget = event.target;
+    if ($eventTarget && $eventTarget.tagName === 'IMG') {
+        viewSwap('details');
+        const closestElement = $eventTarget.closest('.listing-container');
+        const $nameValue = closestElement?.querySelector('.span-name')
+            ?.textContent;
+        const $addressValue = closestElement?.querySelector('.span-address')
+            ?.textContent;
+        const photoUrl = $eventTarget.getAttribute('src');
+        const $listingDetails = {
+            name: $nameValue,
+            address: $addressValue,
+            photo: photoUrl,
+        };
+        if ($details) {
+            $details.innerHTML = '';
+        }
+        const detailedEntry = renderDetails($listingDetails);
+        $details?.prepend(detailedEntry);
+    }
+});

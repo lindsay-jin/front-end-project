@@ -610,3 +610,30 @@ function renderFavorites(favorite: Favorites): HTMLElement {
 
   return $listingContainer;
 }
+
+// details page from favorites page
+$favoriteListings?.addEventListener('click', (event: Event)=>{
+  event.preventDefault();
+  const $eventTarget = event.target as HTMLElement;
+  if ($eventTarget && $eventTarget.tagName === 'IMG') {
+    viewSwap('details');
+    const closestElement = $eventTarget.closest('.listing-container');
+    const $nameValue = closestElement?.querySelector('.span-name')
+      ?.textContent as string;
+    const $addressValue = closestElement?.querySelector('.span-address')
+      ?.textContent as string;
+    const photoUrl = $eventTarget.getAttribute('src') as string;
+    const $listingDetails: ListingDetails = {
+      name: $nameValue,
+      address: $addressValue,
+      photo: photoUrl,
+    };
+
+    if ($details) {
+      $details.innerHTML = '';
+    }
+    const detailedEntry = renderDetails($listingDetails);
+    $details?.prepend(detailedEntry);
+  }
+
+})
