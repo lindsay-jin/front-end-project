@@ -1,22 +1,17 @@
 /* exported data */
 
 interface Data {
-  view: string;
-  entries: Obj[];
-  editing: Obj | null;
-  nextEntryId: number;
+  likedEntries: Favorites[];
 }
 
 let data: Data = {
-  view: 'entry-form',
-  entries: [],
-  editing: null,
-  nextEntryId: 1,
+  likedEntries: [],
 };
 
 window.addEventListener('beforeunload', () => {
   const dataJSON = JSON.stringify(data);
   localStorage.setItem('data-model', dataJSON);
+  // stores the serialized data in the browser's local storage under the key 'data-model'
 });
 
 const storedData = localStorage.getItem('data-model');

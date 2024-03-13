@@ -18,25 +18,25 @@
       rel="stylesheet" />
   </head>
   <body>
-    <!--landing page-->
-    <div class="view-landing">
-      <div class="landing-container">
-        <h1 class="landing-h1">Welcome to</h1>
-        <h1 class="landing-h1-2">StudySpotFinder!</h1>
-        <h2>Search For Your Ideal<br />Study Environment</h2>
-        <button class="start-search-button">START SEARCHING</button>
-        <button class="login-button">I HAVE AN ACCOUNT</button>
+    <div class="main-search">
+      <!--landing page-->
+      <div data-view="landing">
+        <div class="landing-container">
+          <h1 class="landing-h1">Welcome to</h1>
+          <h1 class="landing-h1-2">StudySpotFinder!</h1>
+          <h2>Search For Your Ideal<br />Study Environment</h2>
+          <button class="start-search-button" type="button">START SEARCHING</button>
+          <button class="login-button">I HAVE AN ACCOUNT</button>
+        </div>
       </div>
-    </div>
-    <!--search page-->
-    <div class="view-search hidden">
-      <header>
+      <!--search page-->
+      <header data-view="header" class="hidden">
         <div class="name-container container">
           <h1 class="search-h1">StudySpotFinder</h1>
         </div>
       </header>
       <main>
-        <div class="form-container">
+        <div data-view="form" class="form-container hidden">
           <form class="container" action="">
             <!--first row-->
             <div class="row">
@@ -85,15 +85,22 @@
             </div>
           </form>
         </div>
-        <!--listings-->
-        <div class="listing"></div>
+        <!--listing page-->
+        <div data-view="listing"></div>
+        <!--details page-->
+        <div data-view="details" class="hidden"></div>
+        <!--favorites page-->
+        <div data-view="favorites" class="hidden">
+          <div><h1>Favorites</h1></div>
+          <div class="favorite-listings"></div>
+        </div>
       </main>
 
-      <footer>
+      <footer data-view="footer" class="hidden">
         <div class="bottom-nav-container container">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <i class="fa-solid fa-heart"></i>
-          <i class="fa-solid fa-user"></i>
+          <i class="fa-solid fa-magnifying-glass nav-search-icon"></i>
+          <i class="fa-solid fa-heart nav-heart-icon"></i>
+          <i class="fa-solid fa-user nav-user-icon"></i>
         </div>
       </footer>
     </div>

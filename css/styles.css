@@ -1,8 +1,8 @@
 .hidden {
-  display: none;
+  display: none !important;
 }
 
-.view-landing {
+div[data-view='landing'] {
   background-color: #9baadb;
   color: #384167;
   font-family: Chango, sans-serif;
@@ -15,7 +15,8 @@
   margin-top: 5px;
 }
 
-button {
+button,
+i {
   cursor: pointer;
 }
 
@@ -66,6 +67,10 @@ select {
   background-color: #384167;
   color: white;
   font-weight: bold;
+}
+
+.listing-image {
+  cursor: pointer;
 }
 
 /* footer */
