@@ -1,4 +1,5 @@
 "use strict";
+const favoritesList = [];
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
 // search page
@@ -60,9 +61,10 @@ $startSearchButton?.addEventListener('click', (event) => {
     event?.preventDefault();
     viewSwap('form');
 });
+const $actualForm = document.querySelector('form');
 $resetButton?.addEventListener('click', (event) => {
     event.preventDefault();
-    $form.reset();
+    $actualForm.reset();
 });
 const options = {
     method: 'GET',
@@ -127,6 +129,7 @@ $form?.addEventListener('submit', (event) => {
 });
 // render entry**************************
 function renderEntry(result, photo) {
+    console.log('result.name', result.name);
     const $listingContainer = document.createElement('div');
     $listingContainer.className = 'listing-container';
     const $listingImgContainer = document.createElement('div');
@@ -139,7 +142,14 @@ function renderEntry(result, photo) {
     const $heartContainer = document.createElement('div');
     $heartContainer.className = 'heart-container';
     const $iHeart = document.createElement('i');
-    $iHeart.className = 'fa-regular fa-heart heart-icon';
+    if (favoritesList.some((item) => item.name === result.name)) {
+        console.log('favoritesList', favoritesList);
+        console.log('result.name', result.name);
+        $iHeart.className = 'fa-solid fa-heart heart-icon';
+    }
+    else {
+        $iHeart.className = 'fa-regular fa-heart heart-icon';
+    }
     const $infoContainer = document.createElement('div');
     $infoContainer.className = 'info-container';
     const $nameContainer = document.createElement('div');
@@ -170,6 +180,7 @@ function renderEntry(result, photo) {
     $addressContainer.appendChild($spanAddress);
     return $listingContainer;
 }
+// click on image to show details
 $listing.addEventListener('click', (event) => {
     event.preventDefault();
     const $eventTarget = event.target;
@@ -206,9 +217,8 @@ $navHeartIcon.addEventListener('click', (event) => {
     event.preventDefault();
     viewSwap('favorites');
 });
-const favoritesList = [];
 const $favoriteListings = document.querySelector('.favorite-listings');
-// adding to the favorites page
+// adding to the favorites page***************************
 $listing.addEventListener('click', (event) => {
     event.preventDefault();
     const $eventTarget = event.target;
@@ -244,12 +254,12 @@ $listing.addEventListener('click', (event) => {
                     formatted_address: addressValue,
                 },
             };
-            if (!favoritesList.some((lists) => lists.name === favorites.name)) {
+            if (!favoritesList.some((list) => list.name === favorites.name)) {
                 favoritesList.push(favorites);
+                const favoriteEntry = renderEntry(result, photoValue);
+                $favoriteListings?.prepend(favoriteEntry);
             }
             console.log('favoriteList', favoritesList);
-            const favoriteEntry = renderEntry(result, photoValue);
-            $favoriteListings?.prepend(favoriteEntry);
         }
     }
 });
@@ -268,9 +278,9 @@ $details?.addEventListener('click', (event) => {
             const photoValue = likedListing
                 .querySelector('.details-image')
                 ?.getAttribute('src');
-            const nameValue = likedListing.querySelector('.span-name')
+            const nameValue = likedListing.querySelector('.details-span-name')
                 ?.textContent;
-            const addressValue = likedListing.querySelector('.span-address')
+            const addressValue = likedListing.querySelector('.details-span-address')
                 ?.textContent;
             const favorites = {
                 photo: photoValue,
@@ -289,12 +299,12 @@ $details?.addEventListener('click', (event) => {
                     formatted_address: addressValue,
                 },
             };
-            if (!favoritesList.some((lists) => lists.name === favorites.name)) {
+            if (!favoritesList.some((list) => list.name === favorites.name)) {
                 favoritesList.push(favorites);
+                const favoriteEntry = renderEntry(result, photoValue);
+                $favoriteListings?.prepend(favoriteEntry);
             }
             console.log('favoriteList', favoritesList);
-            const favoriteEntry = renderEntry(result, photoValue);
-            $favoriteListings?.prepend(favoriteEntry);
         }
     }
 });
@@ -313,7 +323,14 @@ function renderDetails(listing) {
     const $iconContainer = document.createElement('div');
     $iconContainer.className = 'icon-container';
     const $heartIcon = document.createElement('i');
-    $heartIcon.className = 'fa-regular fa-heart heart-icon';
+    if (favoritesList.includes(listing)) {
+        $heartIcon.className = 'fa-solid fa-heart heart-icon';
+        console.log('listing', listing);
+        console.log('favoritesList', favoritesList);
+    }
+    else {
+        $heartIcon.className = 'fa-regular fa-heart heart-icon';
+    }
     $detailsContainer.appendChild($detailsLeft);
     $detailsLeft.appendChild($detailsImgContainer);
     $detailsLeft.appendChild($iconContainer);

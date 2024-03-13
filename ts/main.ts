@@ -7,6 +7,25 @@ interface Obj {
   entryId?: number;
 }
 
+interface Favorites {
+  photo: string;
+  name: string;
+  address: string;
+  chair?: string | 'selectOne';
+  wifi?: string | 'selectOne';
+  temp?: string | 'selectOne';
+  dog?: string | 'selectOne';
+  noise?: string | 'selectOne';
+  bathroom?: string | 'selectOne';
+}
+
+interface ListingDetails {
+  name: string;
+  address: string;
+  photo: string;
+}
+
+const favoritesList: Favorites[] = [];
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
 
@@ -77,9 +96,10 @@ $startSearchButton?.addEventListener('click', (event: Event) => {
   viewSwap('form');
 });
 
+const $actualForm = document.querySelector('form') as HTMLFormElement;
 $resetButton?.addEventListener('click', (event: Event) => {
   event.preventDefault();
-  $form.reset();
+  $actualForm.reset();
 });
 
 const options = {
@@ -165,6 +185,7 @@ $form?.addEventListener('submit', (event: Event) => {
 
 // render entry**************************
 function renderEntry(result: any, photo: string): HTMLElement {
+  console.log('result.name', result.name);
   const $listingContainer = document.createElement('div');
   $listingContainer.className = 'listing-container';
 
@@ -182,7 +203,13 @@ function renderEntry(result: any, photo: string): HTMLElement {
   $heartContainer.className = 'heart-container';
 
   const $iHeart = document.createElement('i');
-  $iHeart.className = 'fa-regular fa-heart heart-icon';
+  if(favoritesList.some((item) => item.name === result.name)){
+    console.log('favoritesList', favoritesList)
+    console.log('result.name', result.name)
+    $iHeart.className = 'fa-solid fa-heart heart-icon';
+  } else{
+    $iHeart.className = 'fa-regular fa-heart heart-icon';
+  }
 
   const $infoContainer = document.createElement('div');
   $infoContainer.className = 'info-container';
@@ -227,12 +254,6 @@ function renderEntry(result: any, photo: string): HTMLElement {
 }
 
 // click on image to show details
-interface ListingDetails {
-  name: string;
-  address: string;
-  photo: string;
-}
-
 $listing.addEventListener('click', (event) => {
   event.preventDefault();
 
@@ -276,22 +297,9 @@ $navHeartIcon.addEventListener('click', (event: Event) => {
   viewSwap('favorites');
 });
 
-interface Favorites {
-  photo: string;
-  name: string;
-  address: string;
-  chair: string | 'selectOne';
-  wifi: string | 'selectOne';
-  temp: string | 'selectOne';
-  dog: string | 'selectOne';
-  noise: string | 'selectOne';
-  bathroom: string | 'selectOne';
-}
-
-const favoritesList: Favorites[] = [];
 const $favoriteListings = document.querySelector('.favorite-listings');
 
-// adding to the favorites page
+// adding to the favorites page***************************
 $listing.addEventListener('click', (event: Event) => {
   event.preventDefault();
   const $eventTarget = event.target as HTMLElement;
@@ -334,12 +342,12 @@ $listing.addEventListener('click', (event: Event) => {
         },
       };
 
-      if (!favoritesList.some((lists) => lists.name === favorites.name)) {
-        favoritesList.push(favorites);
-      }
+      if (!favoritesList.some((list) => list.name === favorites.name)) {
+       favoritesList.push(favorites);
+       const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
+       $favoriteListings?.prepend(favoriteEntry);
+     }
       console.log('favoriteList', favoritesList);
-      const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
-      $favoriteListings?.prepend(favoriteEntry);
     }
   }
 });
@@ -363,9 +371,9 @@ $details?.addEventListener('click', (event: Event) => {
       const photoValue = likedListing
         .querySelector('.details-image')
         ?.getAttribute('src') as string;
-      const nameValue = likedListing.querySelector('.span-name')
+      const nameValue = likedListing.querySelector('.details-span-name')
         ?.textContent as string;
-      const addressValue = likedListing.querySelector('.span-address')
+      const addressValue = likedListing.querySelector('.details-span-address')
         ?.textContent as string;
 
       const favorites: Favorites = {
@@ -387,12 +395,12 @@ $details?.addEventListener('click', (event: Event) => {
         },
       };
 
-      if (!favoritesList.some((lists) => lists.name === favorites.name)) {
-        favoritesList.push(favorites);
-      }
+     if (!favoritesList.some((list) => list.name === favorites.name)) {
+       favoritesList.push(favorites);
+       const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
+       $favoriteListings?.prepend(favoriteEntry);
+     }
       console.log('favoriteList', favoritesList);
-      const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
-      $favoriteListings?.prepend(favoriteEntry);
     }
   }
 });
@@ -412,7 +420,13 @@ function renderDetails(listing: ListingDetails): HTMLElement {
   const $iconContainer = document.createElement('div');
   $iconContainer.className = 'icon-container';
   const $heartIcon = document.createElement('i');
-  $heartIcon.className = 'fa-regular fa-heart heart-icon';
+  if(favoritesList.includes(listing)){
+    $heartIcon.className = 'fa-solid fa-heart heart-icon';
+    console.log('listing', listing)
+    console.log('favoritesList', favoritesList)
+  }else{
+    $heartIcon.className = 'fa-regular fa-heart heart-icon';
+  }
 
   $detailsContainer.appendChild($detailsLeft);
   $detailsLeft.appendChild($detailsImgContainer);
