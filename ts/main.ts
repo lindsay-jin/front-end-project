@@ -52,6 +52,7 @@ const $form = document.querySelector(
 ) as HTMLFormElement;
 const $details = document.querySelector('div[data-view="details"]');
 const $favorites = document.querySelector('div[data-view="favorites"]');
+const $main = document.querySelector('main') as HTMLElement;
 // view swap
 function viewSwap(view: string): void {
   if (view === 'landing') {
@@ -281,12 +282,12 @@ $navSearchIcon.addEventListener('click', (event: Event) => {
   viewSwap('form');
 });
 
+const $favoriteListings = document.querySelector('.favorite-listings');
 const $navHeartIcon = document.querySelector('.nav-heart-icon') as HTMLElement;
 $navHeartIcon.addEventListener('click', (event: Event) => {
   viewSwap('favorites');
+  updateMessage();
 });
-
-const $favoriteListings = document.querySelector('.favorite-listings');
 
 // adding to the favorites page***************************
 $listing.addEventListener('click', (event: Event) => {
@@ -296,43 +297,66 @@ $listing.addEventListener('click', (event: Event) => {
     closestIcon.classList.toggle('fa-solid');
     closestIcon.classList.toggle('fa-regular');
 
+    const likedListing = $eventTarget.closest(
+      '.listing-container',
+    ) as HTMLElement;
+
+    const photoValue = likedListing
+      .querySelector('.listing-image')
+      ?.getAttribute('src') as string;
+    const nameValue = likedListing.querySelector('.span-name')
+      ?.textContent as string;
+    const addressValue = likedListing.querySelector('.span-address')
+      ?.textContent as string;
+
+    const favorites: Favorites = {
+      photo: photoValue,
+      name: nameValue,
+      address: addressValue,
+      chair: 'selectOne',
+      wifi: 'selectOne',
+      temp: 'selectOne',
+      dog: 'selectOne',
+      noise: 'selectOne',
+      bathroom: 'selectOne',
+    };
+
+    const result = {
+      name: nameValue,
+      location: { formatted_address: addressValue },
+    };
+
+    //when heart is solid
     if ($eventTarget.classList.contains('fa-solid')) {
-      const likedListing = $eventTarget.closest(
-        '.listing-container',
-      ) as HTMLElement;
-
-      const photoValue = likedListing
-        .querySelector('.listing-image')
-        ?.getAttribute('src') as string;
-      const nameValue = likedListing.querySelector('.span-name')
-        ?.textContent as string;
-      const addressValue = likedListing.querySelector('.span-address')
-        ?.textContent as string;
-
-      const favorites: Favorites = {
-        photo: photoValue,
-        name: nameValue,
-        address: addressValue,
-        chair: 'selectOne',
-        wifi: 'selectOne',
-        temp: 'selectOne',
-        dog: 'selectOne',
-        noise: 'selectOne',
-        bathroom: 'selectOne',
-      };
-
-      const result = {
-        name: nameValue,
-        location: {
-          formatted_address: addressValue,
-        },
-      };
-
       if (!data.likedEntries.some((list) => list.name === favorites.name)) {
         data.likedEntries.push(favorites);
         const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
         $favoriteListings?.prepend(favoriteEntry);
       }
+      updateMessage();
+    }
+    //when heart is empty
+    if ($eventTarget.classList.contains('fa-regular')) {
+      const unLikedListing = $eventTarget.closest(
+        '.listing-container',
+      ) as HTMLElement;
+      const $unLikedName =
+        unLikedListing.querySelector('.span-name')?.textContent;
+
+      data.likedEntries = data.likedEntries.filter(
+        (list) => list.name !== $unLikedName,
+      );
+      //remove the DOM element from the favorites page
+      const $listingsInFavorites =
+        $favoriteListings?.querySelectorAll('.listing-container');
+      $listingsInFavorites?.forEach((listing) => {
+        const nameInListing = listing.querySelector('.span-name')
+          ?.textContent as string;
+        if (nameInListing === $unLikedName) {
+          listing.remove();
+        }
+      });
+      updateMessage();
     }
   }
 });
@@ -382,6 +406,30 @@ $details?.addEventListener('click', (event: Event) => {
         const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
         $favoriteListings?.prepend(favoriteEntry);
       }
+      updateMessage();
+    }
+    //when heart is empty
+    if ($eventTarget.classList.contains('fa-regular')) {
+      const unLikedListing = $eventTarget.closest(
+        '.details-container',
+      ) as HTMLElement;
+      const $unLikedName =
+        unLikedListing.querySelector('.details-span-name')?.textContent;
+
+      data.likedEntries = data.likedEntries.filter(
+        (list) => list.name !== $unLikedName,
+      );
+      //remove the DOM element from the favorites page
+      const $listingsInFavorites =
+        $favoriteListings?.querySelectorAll('.listing-container');
+      $listingsInFavorites?.forEach((listing) => {
+        const nameInListing = listing.querySelector('.span-name')
+          ?.textContent as string;
+        if (nameInListing === $unLikedName) {
+          listing.remove();
+        }
+      });
+      updateMessage();
     }
   }
 });
@@ -603,7 +651,7 @@ function renderFavorites(favorite: Favorites): HTMLElement {
 }
 
 // details page from favorites page
-$favoriteListings?.addEventListener('click', (event: Event)=>{
+$favoriteListings?.addEventListener('click', (event: Event) => {
   const $eventTarget = event.target as HTMLElement;
   if ($eventTarget && $eventTarget.tagName === 'IMG') {
     viewSwap('details');
@@ -626,4 +674,45 @@ $favoriteListings?.addEventListener('click', (event: Event)=>{
     $details?.prepend(detailedEntry);
   }
 
-})
+  //un-liking a listing
+  if ($eventTarget && $eventTarget.tagName === 'I') {
+    $eventTarget.classList.remove('fa-solid');
+    $eventTarget.classList.add('fa-regular');
+
+    const unLikedListing = $eventTarget.closest(
+      '.listing-container',
+    ) as HTMLElement;
+    const $unLikedName =
+      unLikedListing.querySelector('.span-name')?.textContent;
+
+    data.likedEntries = data.likedEntries.filter(
+      (list) => list.name !== $unLikedName,
+    );
+    //remove the DOM element from the favorites page
+    const $listingsInFavorites =
+      $favoriteListings?.querySelectorAll('.listing-container');
+    $listingsInFavorites?.forEach((listing) => {
+      const nameInListing = listing.querySelector('.span-name')
+        ?.textContent as string;
+      if (nameInListing === $unLikedName) {
+        listing.remove();
+      }
+    });
+    updateMessage();
+  }
+});
+
+//updateMessage function
+function updateMessage() {
+  const $message = $favoriteListings?.querySelector('.message');
+  if ($favoriteListings?.children.length === 0) {
+    if (!$message) {
+      const $message = document.createElement('p');
+      $message.className = 'message';
+      $message.textContent = 'No favorites yet!';
+      $favoriteListings.appendChild($message);
+    }
+  } else {
+    $message?.remove();
+  }
+}
