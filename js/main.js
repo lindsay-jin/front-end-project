@@ -376,6 +376,33 @@ function renderDetails(listing) {
     const $detailsExtra = document.createElement('div');
     $detailsExtra.className = 'details-extra';
     const $detailsForm = document.createElement('form');
+    //edit*****************************
+    $detailsForm.addEventListener('click', (event) => {
+        event.preventDefault();
+        const $eventTarget = event.target;
+        if ($eventTarget && $eventTarget.tagName === 'BUTTON') {
+            $editButton.type = 'submit';
+            $editButton.textContent = 'SAVE';
+            $chairSelect.disabled = false;
+            $wifiSelect.disabled = false;
+            $tempSelect.disabled = false;
+            const listing = $eventTarget.closest('.details-container');
+            const photoValue = listing.querySelector('.details-image')?.getAttribute('src');
+            const nameValue = listing.querySelector('.details-span-name')?.textContent;
+            const addressValue = listing.querySelector('.details-span-address')?.textContent;
+            const chair = listing.querySelector('#chair');
+            const wifi = listing.querySelector('#wifi');
+            const temp = listing.querySelector('#temp');
+            const editedListing = {
+                photo: photoValue,
+                name: nameValue,
+                address: addressValue,
+                chair: chair.value,
+                wifi: wifi.value,
+                temp: temp.value,
+            };
+        }
+    });
     const $chairLabel = document.createElement('label');
     $chairLabel.setAttribute('for', 'chair');
     $chairLabel.textContent = 'Comfy Chair: ';

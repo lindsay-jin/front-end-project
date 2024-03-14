@@ -488,7 +488,40 @@ function renderDetails(listing: ListingDetails): HTMLElement {
   // details-extra: chair
   const $detailsExtra = document.createElement('div');
   $detailsExtra.className = 'details-extra';
-  const $detailsForm = document.createElement('form');
+  const $detailsForm = document.createElement('form') as HTMLFormElement;
+
+  //edit*****************************
+  $detailsForm.addEventListener('click', (event: Event)=>{
+    event.preventDefault();
+    const $eventTarget = event.target as HTMLElement;
+    if ($eventTarget && $eventTarget.tagName === 'BUTTON') {
+      $editButton.type = 'submit';
+      $editButton.textContent = 'SAVE';
+      $chairSelect.disabled = false;
+      $wifiSelect.disabled = false;
+      $tempSelect.disabled = false;
+
+      const listing = $eventTarget.closest('.details-container',) as HTMLElement;
+
+      const photoValue = listing.querySelector('.details-image')?.getAttribute('src') as string;
+      const nameValue = listing.querySelector('.details-span-name')?.textContent as string;
+      const addressValue = listing.querySelector('.details-span-address')?.textContent as string;
+      const chair = listing.querySelector('#chair') as HTMLSelectElement;
+      const wifi = listing.querySelector('#wifi') as HTMLSelectElement;
+      const temp = listing.querySelector('#temp') as HTMLSelectElement;
+
+      const editedListing: Favorites = {
+        photo: photoValue,
+        name: nameValue,
+        address: addressValue,
+        chair: chair.value,
+        wifi: wifi.value,
+        temp: temp.value,
+      };
+
+    }
+  })
+
   const $chairLabel = document.createElement('label');
   $chairLabel.setAttribute('for', 'chair');
   $chairLabel.textContent = 'Comfy Chair: ';
