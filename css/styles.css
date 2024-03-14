@@ -10,6 +10,10 @@ div[data-view="landing"] {
   font-style: normal;
 }
 
+.purple {
+  background-color: #9baadb;
+}
+
 .landing-h1-2 {
   color: white;
   margin-top: 5px;

@@ -16,6 +16,7 @@ const $footer = document.querySelector('footer[data-view="footer"]');
 const $form = document.querySelector('div[data-view="form"]');
 const $details = document.querySelector('div[data-view="details"]');
 const $favorites = document.querySelector('div[data-view="favorites"]');
+const $main = document.querySelector('main');
 // view swap
 function viewSwap(view) {
     if (view === 'landing') {
@@ -203,7 +204,6 @@ $navSearchIcon.addEventListener('click', (event) => {
     viewSwap('form');
 });
 const $favoriteListings = document.querySelector('.favorite-listings');
-console.log($favoriteListings?.children.length);
 const $navHeartIcon = document.querySelector('.nav-heart-icon');
 $navHeartIcon.addEventListener('click', (event) => {
     viewSwap('favorites');

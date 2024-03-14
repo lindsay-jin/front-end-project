@@ -58,6 +58,10 @@ label {
   margin-right: 5px;
 }
 
+input {
+  width: 100%;
+}
+
 .option-row {
   display: flex;
   flex-wrap: wrap;
@@ -271,14 +275,13 @@ footer {
   }
 
   /* details */
-  div[data-view="details"] {
+  .details-container {
     display: flex;
     padding: 0 2rem;
-    flex-direction: column;
   }
 
   .details-left {
-    width: 100%;
+    width: 50%;
     margin-right: 20px;
   }
 
@@ -288,18 +291,22 @@ footer {
   }
 
   .details-right {
-    width: 100%;
+    width: 50%;
   }
 
   .icon-container {
-    width: 500px;
     display: flex;
     justify-content: end;
   }
 
   .edit-button-container {
     margin-top: 30px;
-    width: 500px;
     justify-content: end;
+  }
+
+  /* favorites */
+  .favorite-listings {
+    display: flex;
+    flex-wrap: wrap;
   }
 }

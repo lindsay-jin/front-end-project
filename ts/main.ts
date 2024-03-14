@@ -52,6 +52,7 @@ const $form = document.querySelector(
 ) as HTMLFormElement;
 const $details = document.querySelector('div[data-view="details"]');
 const $favorites = document.querySelector('div[data-view="favorites"]');
+const $main = document.querySelector('main') as HTMLElement;
 // view swap
 function viewSwap(view: string): void {
   if (view === 'landing') {
@@ -282,7 +283,6 @@ $navSearchIcon.addEventListener('click', (event: Event) => {
 });
 
 const $favoriteListings = document.querySelector('.favorite-listings');
-console.log($favoriteListings?.children.length);
 const $navHeartIcon = document.querySelector('.nav-heart-icon') as HTMLElement;
 $navHeartIcon.addEventListener('click', (event: Event) => {
   viewSwap('favorites');
