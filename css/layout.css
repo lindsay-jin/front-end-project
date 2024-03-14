@@ -41,7 +41,7 @@ header {
   margin-bottom: 7px;
 }
 
-form {
+div[data-view="form"] form {
   margin: 0 1rem;
   display: flex;
   flex-wrap: wrap;
@@ -166,7 +166,7 @@ div[data-view="details"] {
   margin: 5px 0;
 }
 
-.details-extra {
+.details-extra form {
   display: flex;
   flex-direction: column;
 }

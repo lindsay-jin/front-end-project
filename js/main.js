@@ -375,6 +375,7 @@ function renderDetails(listing) {
     // details-extra: chair
     const $detailsExtra = document.createElement('div');
     $detailsExtra.className = 'details-extra';
+    const $detailsForm = document.createElement('form');
     const $chairLabel = document.createElement('label');
     $chairLabel.setAttribute('for', 'chair');
     $chairLabel.textContent = 'Comfy Chair: ';
@@ -392,8 +393,9 @@ function renderDetails(listing) {
     $chairOptionNo.setAttribute('value', 'no');
     $chairOptionNo.textContent = 'NO';
     $detailsRight.appendChild($detailsExtra);
-    $detailsExtra.appendChild($chairLabel);
-    $detailsExtra.appendChild($chairSelect);
+    $detailsExtra.appendChild($detailsForm);
+    $detailsForm.appendChild($chairLabel);
+    $detailsForm.appendChild($chairSelect);
     $chairSelect.appendChild($chairOptionSelectOne);
     $chairSelect.appendChild($chairOptionYes);
     $chairSelect.appendChild($chairOptionNo);
@@ -416,8 +418,8 @@ function renderDetails(listing) {
         $option.textContent = opt.text;
         $wifiSelect.appendChild($option);
     });
-    $detailsExtra.appendChild($wifiLabel);
-    $detailsExtra.appendChild($wifiSelect);
+    $detailsForm.appendChild($wifiLabel);
+    $detailsForm.appendChild($wifiSelect);
     // temp
     const $tempLabel = document.createElement('label');
     $tempLabel.setAttribute('for', 'temp');
@@ -441,8 +443,8 @@ function renderDetails(listing) {
     const $optionHot = document.createElement('option');
     $optionHot.value = 'hot';
     $optionHot.textContent = 'Too hot!';
-    $detailsExtra.appendChild($tempLabel);
-    $detailsExtra.appendChild($tempSelect);
+    $detailsForm.appendChild($tempLabel);
+    $detailsForm.appendChild($tempSelect);
     $tempSelect.appendChild($tempOptionSelectOne);
     $tempSelect.appendChild($optionFreezing);
     $tempSelect.appendChild($optionCool);
@@ -455,7 +457,7 @@ function renderDetails(listing) {
     $editButton.className = 'edit-button';
     $editButton.type = 'button';
     $editButton.textContent = 'EDIT';
-    $detailsExtra.appendChild($editButtonContainer);
+    $detailsForm.appendChild($editButtonContainer);
     $editButtonContainer.appendChild($editButton);
     return $detailsContainer;
 }

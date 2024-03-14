@@ -2,10 +2,12 @@
 
 interface Data {
   likedEntries: Favorites[];
+  editedEntries: [];
 }
 
 let data: Data = {
   likedEntries: [],
+  editedEntries: [],
 };
 
 window.addEventListener('beforeunload', () => {
