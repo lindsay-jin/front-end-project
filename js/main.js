@@ -214,37 +214,50 @@ $listing.addEventListener('click', (event) => {
         const closestIcon = $eventTarget.closest('i');
         closestIcon.classList.toggle('fa-solid');
         closestIcon.classList.toggle('fa-regular');
+        const likedListing = $eventTarget.closest('.listing-container');
+        const photoValue = likedListing
+            .querySelector('.listing-image')
+            ?.getAttribute('src');
+        const nameValue = likedListing.querySelector('.span-name')
+            ?.textContent;
+        const addressValue = likedListing.querySelector('.span-address')
+            ?.textContent;
+        const favorites = {
+            photo: photoValue,
+            name: nameValue,
+            address: addressValue,
+            chair: 'selectOne',
+            wifi: 'selectOne',
+            temp: 'selectOne',
+            dog: 'selectOne',
+            noise: 'selectOne',
+            bathroom: 'selectOne',
+        };
+        const result = {
+            name: nameValue,
+            location: { formatted_address: addressValue },
+        };
+        //when heart is solid
         if ($eventTarget.classList.contains('fa-solid')) {
-            const likedListing = $eventTarget.closest('.listing-container');
-            const photoValue = likedListing
-                .querySelector('.listing-image')
-                ?.getAttribute('src');
-            const nameValue = likedListing.querySelector('.span-name')
-                ?.textContent;
-            const addressValue = likedListing.querySelector('.span-address')
-                ?.textContent;
-            const favorites = {
-                photo: photoValue,
-                name: nameValue,
-                address: addressValue,
-                chair: 'selectOne',
-                wifi: 'selectOne',
-                temp: 'selectOne',
-                dog: 'selectOne',
-                noise: 'selectOne',
-                bathroom: 'selectOne',
-            };
-            const result = {
-                name: nameValue,
-                location: {
-                    formatted_address: addressValue,
-                },
-            };
             if (!data.likedEntries.some((list) => list.name === favorites.name)) {
                 data.likedEntries.push(favorites);
                 const favoriteEntry = renderEntry(result, photoValue);
                 $favoriteListings?.prepend(favoriteEntry);
             }
+        }
+        //when heart is empty
+        if ($eventTarget.classList.contains('fa-regular')) {
+            const unLikedListing = $eventTarget.closest('.listing-container');
+            const $unLikedName = unLikedListing.querySelector('.span-name')?.textContent;
+            data.likedEntries = data.likedEntries.filter((list) => list.name !== $unLikedName);
+            //remove the DOM element from the favorites page
+            const $listingsInFavorites = $favoriteListings?.querySelectorAll('.listing-container');
+            $listingsInFavorites?.forEach(listing => {
+                const nameInListing = listing.querySelector('.span-name')?.textContent;
+                if (nameInListing === $unLikedName) {
+                    listing.remove();
+                }
+            });
         }
     }
 });
