@@ -281,12 +281,13 @@ $navSearchIcon.addEventListener('click', (event: Event) => {
   viewSwap('form');
 });
 
+const $favoriteListings = document.querySelector('.favorite-listings');
+console.log($favoriteListings?.children.length);
 const $navHeartIcon = document.querySelector('.nav-heart-icon') as HTMLElement;
 $navHeartIcon.addEventListener('click', (event: Event) => {
   viewSwap('favorites');
+  updateMessage();
 });
-
-const $favoriteListings = document.querySelector('.favorite-listings');
 
 // adding to the favorites page***************************
 $listing.addEventListener('click', (event: Event) => {
@@ -332,23 +333,30 @@ $listing.addEventListener('click', (event: Event) => {
         const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
         $favoriteListings?.prepend(favoriteEntry);
       }
+      updateMessage();
     }
     //when heart is empty
     if ($eventTarget.classList.contains('fa-regular')) {
-      const unLikedListing = $eventTarget.closest('.listing-container',) as HTMLElement;
-      const $unLikedName = unLikedListing.querySelector('.span-name')?.textContent;
+      const unLikedListing = $eventTarget.closest(
+        '.listing-container',
+      ) as HTMLElement;
+      const $unLikedName =
+        unLikedListing.querySelector('.span-name')?.textContent;
 
       data.likedEntries = data.likedEntries.filter(
         (list) => list.name !== $unLikedName,
       );
       //remove the DOM element from the favorites page
-      const $listingsInFavorites = $favoriteListings?.querySelectorAll('.listing-container');
-      $listingsInFavorites?.forEach(listing=>{
-        const nameInListing = listing.querySelector('.span-name')?.textContent as string;
+      const $listingsInFavorites =
+        $favoriteListings?.querySelectorAll('.listing-container');
+      $listingsInFavorites?.forEach((listing) => {
+        const nameInListing = listing.querySelector('.span-name')
+          ?.textContent as string;
         if (nameInListing === $unLikedName) {
           listing.remove();
         }
-      })
+      });
+      updateMessage();
     }
   }
 });
@@ -398,6 +406,30 @@ $details?.addEventListener('click', (event: Event) => {
         const favoriteEntry = renderEntry(result, photoValue) as HTMLElement;
         $favoriteListings?.prepend(favoriteEntry);
       }
+      updateMessage();
+    }
+    //when heart is empty
+    if ($eventTarget.classList.contains('fa-regular')) {
+      const unLikedListing = $eventTarget.closest(
+        '.details-container',
+      ) as HTMLElement;
+      const $unLikedName =
+        unLikedListing.querySelector('.details-span-name')?.textContent;
+
+      data.likedEntries = data.likedEntries.filter(
+        (list) => list.name !== $unLikedName,
+      );
+      //remove the DOM element from the favorites page
+      const $listingsInFavorites =
+        $favoriteListings?.querySelectorAll('.listing-container');
+      $listingsInFavorites?.forEach((listing) => {
+        const nameInListing = listing.querySelector('.span-name')
+          ?.textContent as string;
+        if (nameInListing === $unLikedName) {
+          listing.remove();
+        }
+      });
+      updateMessage();
     }
   }
 });
@@ -641,4 +673,46 @@ $favoriteListings?.addEventListener('click', (event: Event) => {
     const detailedEntry = renderDetails($listingDetails);
     $details?.prepend(detailedEntry);
   }
+
+  //un-liking a listing
+  if ($eventTarget && $eventTarget.tagName === 'I') {
+    $eventTarget.classList.remove('fa-solid');
+    $eventTarget.classList.add('fa-regular');
+
+    const unLikedListing = $eventTarget.closest(
+      '.listing-container',
+    ) as HTMLElement;
+    const $unLikedName =
+      unLikedListing.querySelector('.span-name')?.textContent;
+
+    data.likedEntries = data.likedEntries.filter(
+      (list) => list.name !== $unLikedName,
+    );
+    //remove the DOM element from the favorites page
+    const $listingsInFavorites =
+      $favoriteListings?.querySelectorAll('.listing-container');
+    $listingsInFavorites?.forEach((listing) => {
+      const nameInListing = listing.querySelector('.span-name')
+        ?.textContent as string;
+      if (nameInListing === $unLikedName) {
+        listing.remove();
+      }
+    });
+    updateMessage();
+  }
 });
+
+//updateMessage function
+function updateMessage() {
+  const $message = $favoriteListings?.querySelector('.message');
+  if ($favoriteListings?.children.length === 0) {
+    if (!$message) {
+      const $message = document.createElement('p');
+      $message.className = 'message';
+      $message.textContent = 'No favorites yet!';
+      $favoriteListings.appendChild($message);
+    }
+  } else {
+    $message?.remove();
+  }
+}
