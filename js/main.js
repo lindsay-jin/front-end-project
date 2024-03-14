@@ -1,4 +1,9 @@
 "use strict";
+// interface ListingDetails {
+//   name: string;
+//   address: string;
+//   photo: string;
+// }
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
 // search page
@@ -181,21 +186,29 @@ $listing.addEventListener('click', (event) => {
     if ($eventTarget && $eventTarget.tagName === 'IMG') {
         viewSwap('details');
         const closestElement = $eventTarget.closest('.listing-container');
-        const $nameValue = closestElement?.querySelector('.span-name')
-            ?.textContent;
-        const $addressValue = closestElement?.querySelector('.span-address')
-            ?.textContent;
-        const photoUrl = $eventTarget.getAttribute('src');
-        const $listingDetails = {
-            name: $nameValue,
-            address: $addressValue,
-            photo: photoUrl,
-        };
+        const $nameValue = closestElement?.querySelector('.span-name')?.textContent;
         if ($details) {
             $details.innerHTML = '';
         }
-        const detailedEntry = renderDetails($listingDetails);
-        $details?.prepend(detailedEntry);
+        const exist = data.editedEntries.some(list => list.name === $nameValue);
+        if (exist) {
+            const listing = data.editedEntries.find(list => list.name === $nameValue);
+            console.log('listing exist already:', listing);
+            const entry = renderDetails(listing);
+            $details?.prepend(entry);
+        }
+        else {
+            const $addressValue = closestElement?.querySelector('.span-address')
+                ?.textContent;
+            const photoUrl = $eventTarget.getAttribute('src');
+            const $listingDetails = {
+                name: $nameValue,
+                address: $addressValue,
+                photo: photoUrl,
+            };
+            const detailedEntry = renderDetails($listingDetails);
+            $details?.prepend(detailedEntry);
+        }
     }
 });
 // nav bar
@@ -436,16 +449,22 @@ function renderDetails(listing) {
     const $chairSelect = document.createElement('select');
     $chairSelect.setAttribute('name', 'chair');
     $chairSelect.setAttribute('id', 'chair');
-    $chairSelect.disabled = true; // Disables the select element
     const $chairOptionSelectOne = document.createElement('option');
-    $chairOptionSelectOne.setAttribute('value', 'selectOne');
-    $chairOptionSelectOne.textContent = 'Select One';
     const $chairOptionYes = document.createElement('option');
-    $chairOptionYes.setAttribute('value', 'yes');
     $chairOptionYes.textContent = 'YES';
     const $chairOptionNo = document.createElement('option');
-    $chairOptionNo.setAttribute('value', 'no');
     $chairOptionNo.textContent = 'NO';
+    if (data.editedEntries.some(list => list.name === listing.name)) {
+        $chairSelect.disabled = false;
+        $chairSelect.value = listing.chair;
+    }
+    else {
+        $chairSelect.disabled = true;
+        $chairOptionSelectOne.setAttribute('value', 'selectOne');
+        $chairOptionSelectOne.textContent = 'Select One';
+        $chairOptionYes.setAttribute('value', 'yes');
+        $chairOptionNo.setAttribute('value', 'no');
+    }
     $detailsRight.appendChild($detailsExtra);
     $detailsExtra.appendChild($detailsForm);
     $detailsForm.appendChild($chairLabel);

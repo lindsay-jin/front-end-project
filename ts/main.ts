@@ -19,11 +19,11 @@ interface Favorites {
   bathroom?: string | 'selectOne';
 }
 
-interface ListingDetails {
-  name: string;
-  address: string;
-  photo: string;
-}
+// interface ListingDetails {
+//   name: string;
+//   address: string;
+//   photo: string;
+// }
 
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
@@ -254,23 +254,31 @@ $listing.addEventListener('click', (event) => {
   const $eventTarget = event.target as HTMLElement;
   if ($eventTarget && $eventTarget.tagName === 'IMG') {
     viewSwap('details');
-    const closestElement = $eventTarget.closest('.listing-container');
-    const $nameValue = closestElement?.querySelector('.span-name')
-      ?.textContent as string;
-    const $addressValue = closestElement?.querySelector('.span-address')
-      ?.textContent as string;
-    const photoUrl = $eventTarget.getAttribute('src') as string;
-    const $listingDetails: ListingDetails = {
-      name: $nameValue,
-      address: $addressValue,
-      photo: photoUrl,
-    };
 
+    const closestElement = $eventTarget.closest('.listing-container');
+    const $nameValue = closestElement?.querySelector('.span-name')?.textContent as string;
     if ($details) {
       $details.innerHTML = '';
     }
-    const detailedEntry = renderDetails($listingDetails);
-    $details?.prepend(detailedEntry);
+    const exist = data.editedEntries.some(list=>
+      list.name === $nameValue);
+    if(exist){
+      const listing = data.editedEntries.find(list=>list.name === $nameValue) as Favorites;
+      console.log('listing exist already:', listing)
+      const entry = renderDetails(listing);
+      $details?.prepend(entry);
+    } else{
+      const $addressValue = closestElement?.querySelector('.span-address')
+        ?.textContent as string;
+      const photoUrl = $eventTarget.getAttribute('src') as string;
+      const $listingDetails: Favorites = {
+        name: $nameValue,
+        address: $addressValue,
+        photo: photoUrl,
+      };
+      const detailedEntry = renderDetails($listingDetails);
+      $details?.prepend(detailedEntry);
+    }
   }
 });
 
@@ -435,7 +443,7 @@ $details?.addEventListener('click', (event: Event) => {
 });
 
 // render details
-function renderDetails(listing: ListingDetails): HTMLElement {
+function renderDetails(listing: Favorites): HTMLElement {
   const $detailsContainer = document.createElement('div');
   $detailsContainer.className = 'details-container';
   // left side
@@ -561,16 +569,21 @@ function renderDetails(listing: ListingDetails): HTMLElement {
   const $chairSelect = document.createElement('select');
   $chairSelect.setAttribute('name', 'chair');
   $chairSelect.setAttribute('id', 'chair');
-  $chairSelect.disabled = true; // Disables the select element
   const $chairOptionSelectOne = document.createElement('option');
-  $chairOptionSelectOne.setAttribute('value', 'selectOne');
-  $chairOptionSelectOne.textContent = 'Select One';
   const $chairOptionYes = document.createElement('option');
-  $chairOptionYes.setAttribute('value', 'yes');
   $chairOptionYes.textContent = 'YES';
   const $chairOptionNo = document.createElement('option');
-  $chairOptionNo.setAttribute('value', 'no');
   $chairOptionNo.textContent = 'NO';
+  if(data.editedEntries.some(list=>list.name===listing.name)){
+    $chairSelect.disabled = false;
+    $chairSelect.value = listing.chair as string;
+  }else{
+    $chairSelect.disabled = true;
+    $chairOptionSelectOne.setAttribute('value', 'selectOne');
+    $chairOptionSelectOne.textContent = 'Select One';
+    $chairOptionYes.setAttribute('value', 'yes');
+    $chairOptionNo.setAttribute('value', 'no');
+  }
 
   $detailsRight.appendChild($detailsExtra);
   $detailsExtra.appendChild($detailsForm);
@@ -729,7 +742,7 @@ $favoriteListings?.addEventListener('click', (event: Event) => {
     const $addressValue = closestElement?.querySelector('.span-address')
       ?.textContent as string;
     const photoUrl = $eventTarget.getAttribute('src') as string;
-    const $listingDetails: ListingDetails = {
+    const $listingDetails: Favorites = {
       name: $nameValue,
       address: $addressValue,
       photo: photoUrl,
