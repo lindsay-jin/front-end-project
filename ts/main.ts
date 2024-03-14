@@ -567,23 +567,18 @@ function renderDetails(listing: Favorites): HTMLElement {
   $chairLabel.setAttribute('for', 'chair');
   $chairLabel.textContent = 'Comfy Chair: ';
   const $chairSelect = document.createElement('select');
+  $chairSelect.disabled = true;
   $chairSelect.setAttribute('name', 'chair');
   $chairSelect.setAttribute('id', 'chair');
   const $chairOptionSelectOne = document.createElement('option');
+  $chairOptionSelectOne.setAttribute('value', 'selectOne');
+  $chairOptionSelectOne.textContent = 'Select One';
   const $chairOptionYes = document.createElement('option');
+  $chairOptionYes.setAttribute('value', 'yes');
   $chairOptionYes.textContent = 'YES';
   const $chairOptionNo = document.createElement('option');
+  $chairOptionNo.setAttribute('value', 'no');
   $chairOptionNo.textContent = 'NO';
-  if(data.editedEntries.some(list=>list.name===listing.name)){
-    $chairSelect.disabled = false;
-    $chairSelect.value = listing.chair as string;
-  }else{
-    $chairSelect.disabled = true;
-    $chairOptionSelectOne.setAttribute('value', 'selectOne');
-    $chairOptionSelectOne.textContent = 'Select One';
-    $chairOptionYes.setAttribute('value', 'yes');
-    $chairOptionNo.setAttribute('value', 'no');
-  }
 
   $detailsRight.appendChild($detailsExtra);
   $detailsExtra.appendChild($detailsForm);
@@ -592,6 +587,19 @@ function renderDetails(listing: Favorites): HTMLElement {
   $chairSelect.appendChild($chairOptionSelectOne);
   $chairSelect.appendChild($chairOptionYes);
   $chairSelect.appendChild($chairOptionNo);
+
+  if(data.editedEntries.some(list=>list.name===listing.name)){
+    const edited = data.editedEntries.find(
+      (list) => list.name === listing.name,
+    );
+    if(edited && edited.chair){
+      $chairSelect.value = edited.chair;
+    } else{
+      $chairSelect.value = 'selectOne';
+    }
+  }else{
+    $chairSelect.value = 'selectOne';
+  }
 
   // wifi
   const $wifiLabel = document.createElement('label');
