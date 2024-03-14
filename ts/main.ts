@@ -501,11 +501,15 @@ function renderDetails(listing: ListingDetails): HTMLElement {
       $wifiSelect.disabled = false;
       $tempSelect.disabled = false;
 
-      const listing = $eventTarget.closest('.details-container',) as HTMLElement;
+      const listing = $eventTarget.closest('.details-container') as HTMLElement;
 
-      const photoValue = listing.querySelector('.details-image')?.getAttribute('src') as string;
-      const nameValue = listing.querySelector('.details-span-name')?.textContent as string;
-      const addressValue = listing.querySelector('.details-span-address')?.textContent as string;
+      const photoValue = listing
+        .querySelector('.details-image')
+        ?.getAttribute('src') as string;
+      const nameValue = listing.querySelector('.details-span-name')
+        ?.textContent as string;
+      const addressValue = listing.querySelector('.details-span-address')
+        ?.textContent as string;
       const chair = listing.querySelector('#chair') as HTMLSelectElement;
       const wifi = listing.querySelector('#wifi') as HTMLSelectElement;
       const temp = listing.querySelector('#temp') as HTMLSelectElement;
@@ -519,6 +523,35 @@ function renderDetails(listing: ListingDetails): HTMLElement {
         temp: temp.value,
       };
 
+      //check if listing already exist in the edited array
+      if (!data.editedEntries) {
+        data.editedEntries = [];
+      }
+      const exists = data.editedEntries.some((list) =>
+      list.name === editedListing.name);
+
+      if (exists) {
+        data.editedEntries = data.editedEntries.map((list) =>
+          list.name === editedListing.name ? editedListing : list,
+          )} else {
+        data.editedEntries.push(editedListing);
+      }
+      console.log('data.editedEntries', data.editedEntries);
+
+      //check if listing already exist in liked array, if the heart is solid
+      if($heartIcon.className === 'fa-solid fa-heart heart-icon'){
+        const duplicate = data.likedEntries.some(
+          (list) => list.name === editedListing.name,
+        );
+        if (duplicate) {
+          data.likedEntries = data.likedEntries.map((list) =>
+            list.name === editedListing.name ? editedListing : list,
+          );
+        } else {
+          data.likedEntries.push(editedListing);
+        }
+        console.log('data.likedEntries', data.likedEntries);
+      }
     }
   })
 

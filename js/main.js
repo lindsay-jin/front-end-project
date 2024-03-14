@@ -387,9 +387,13 @@ function renderDetails(listing) {
             $wifiSelect.disabled = false;
             $tempSelect.disabled = false;
             const listing = $eventTarget.closest('.details-container');
-            const photoValue = listing.querySelector('.details-image')?.getAttribute('src');
-            const nameValue = listing.querySelector('.details-span-name')?.textContent;
-            const addressValue = listing.querySelector('.details-span-address')?.textContent;
+            const photoValue = listing
+                .querySelector('.details-image')
+                ?.getAttribute('src');
+            const nameValue = listing.querySelector('.details-span-name')
+                ?.textContent;
+            const addressValue = listing.querySelector('.details-span-address')
+                ?.textContent;
             const chair = listing.querySelector('#chair');
             const wifi = listing.querySelector('#wifi');
             const temp = listing.querySelector('#temp');
@@ -401,6 +405,29 @@ function renderDetails(listing) {
                 wifi: wifi.value,
                 temp: temp.value,
             };
+            //check if listing already exist in the edited array
+            if (!data.editedEntries) {
+                data.editedEntries = [];
+            }
+            const exists = data.editedEntries.some((list) => list.name === editedListing.name);
+            if (exists) {
+                data.editedEntries = data.editedEntries.map((list) => list.name === editedListing.name ? editedListing : list);
+            }
+            else {
+                data.editedEntries.push(editedListing);
+            }
+            console.log('data.editedEntries', data.editedEntries);
+            //check if listing already exist in liked array, if the heart is solid
+            if ($heartIcon.className === 'fa-solid fa-heart heart-icon') {
+                const duplicate = data.likedEntries.some((list) => list.name === editedListing.name);
+                if (duplicate) {
+                    data.likedEntries = data.likedEntries.map((list) => list.name === editedListing.name ? editedListing : list);
+                }
+                else {
+                    data.likedEntries.push(editedListing);
+                }
+                console.log('data.likedEntries', data.likedEntries);
+            }
         }
     });
     const $chairLabel = document.createElement('label');

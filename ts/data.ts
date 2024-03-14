@@ -2,7 +2,7 @@
 
 interface Data {
   likedEntries: Favorites[];
-  editedEntries: [];
+  editedEntries: Favorites[];
 }
 
 let data: Data = {
