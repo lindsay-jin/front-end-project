@@ -57,6 +57,7 @@ const $main = document.querySelector('main') as HTMLElement;
 function viewSwap(view: string): void {
   if (view === 'landing') {
     $viewLanding?.classList.remove('hidden');
+    $main.classList.add('hidden')
     $header.classList.add('hidden');
     $form.classList.add('hidden');
     $footer.classList.add('hidden');
@@ -65,6 +66,7 @@ function viewSwap(view: string): void {
     $favorites?.classList.add('hidden');
   } else if (view === 'form') {
     $form.classList.remove('hidden');
+    $main.classList.remove('hidden');
     $listing.classList.remove('hidden');
     $viewLanding?.classList.add('hidden');
     $header.classList.remove('hidden');
@@ -73,6 +75,7 @@ function viewSwap(view: string): void {
     $favorites?.classList.add('hidden');
   } else if (view === 'details') {
     $details?.classList.remove('hidden');
+    $main.classList.remove('hidden');
     $header.classList.remove('hidden');
     $footer.classList.remove('hidden');
     $viewLanding?.classList.add('hidden');
@@ -81,6 +84,7 @@ function viewSwap(view: string): void {
     $favorites?.classList.add('hidden');
   } else if (view === 'favorites') {
     $favorites?.classList.remove('hidden');
+    $main.classList.remove('hidden');
     $details?.classList.add('hidden');
     $header.classList.remove('hidden');
     $footer.classList.remove('hidden');
