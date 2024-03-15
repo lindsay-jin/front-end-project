@@ -339,6 +339,7 @@ $details?.addEventListener('click', (event) => {
 });
 // render details
 function renderDetails(listing) {
+    console.log('listing', listing);
     const $detailsContainer = document.createElement('div');
     $detailsContainer.className = 'details-container';
     // left side
@@ -479,24 +480,11 @@ function renderDetails(listing) {
             $chairSelect.disabled = false;
             $wifiSelect.disabled = false;
             $tempSelect.disabled = false;
-            const listing = document.querySelector('.details-container');
-            const photoValue = listing
-                .querySelector('.details-image')
-                ?.getAttribute('src');
-            const nameValue = listing.querySelector('.details-span-name')
-                ?.textContent;
-            const addressValue = listing.querySelector('.details-span-address')
-                ?.textContent;
-            const chair = listing.querySelector('#chair');
-            const wifi = listing.querySelector('#wifi');
-            const temp = listing.querySelector('#temp');
             const editedListing = {
-                photo: photoValue,
-                name: nameValue,
-                address: addressValue,
-                chair: chair.value,
-                wifi: wifi.value,
-                temp: temp.value,
+                ...listing,
+                chair: $chairSelect.value,
+                wifi: $wifiSelect.value,
+                temp: $tempSelect.value,
             };
             //check if listing already exist in the edited array
             if (!data.editedEntries) {
@@ -520,17 +508,6 @@ function renderDetails(listing) {
                 }
                 console.log('data.likedEntries', data.likedEntries);
             }
-            if (data.editedEntries.some((list) => list.name === listing.name)) {
-                const edited = data.editedEntries.find((list) => list.name === listing.name);
-                $chairSelect.value = edited?.chair;
-                $wifiSelect.value = edited?.wifi;
-                $tempSelect.value = edited?.temp;
-            }
-            else {
-                $chairSelect.value = 'selectOne';
-                $wifiSelect.value = 'selectOne';
-                $tempSelect.value = 'selectOne';
-            }
         }
         else if ($editButton.textContent === 'SAVE') {
             $editButton.textContent = 'EDIT';
@@ -539,6 +516,17 @@ function renderDetails(listing) {
             $tempSelect.disabled = true;
         }
     });
+    if (data.editedEntries.some((list) => list.name === listing.name)) {
+        const edited = data.editedEntries.find((list) => list.name === listing.name);
+        $chairSelect.value = edited?.chair;
+        $wifiSelect.value = edited?.wifi;
+        $tempSelect.value = edited?.temp;
+    }
+    else {
+        $chairSelect.value = 'selectOne';
+        $wifiSelect.value = 'selectOne';
+        $tempSelect.value = 'selectOne';
+    }
     return $detailsContainer;
 }
 // render favorites page

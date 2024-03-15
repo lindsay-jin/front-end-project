@@ -445,6 +445,7 @@ $details?.addEventListener('click', (event: Event) => {
 
 // render details
 function renderDetails(listing: Favorites): HTMLElement {
+  console.log('listing',listing);
   const $detailsContainer = document.createElement('div');
   $detailsContainer.className = 'details-container';
   // left side
@@ -597,29 +598,13 @@ function renderDetails(listing: Favorites): HTMLElement {
       $wifiSelect.disabled = false;
       $tempSelect.disabled = false;
 
-      const listing = document.querySelector(
-        '.details-container',
-      ) as HTMLElement;
-
-      const photoValue = listing
-        .querySelector('.details-image')
-        ?.getAttribute('src') as string;
-      const nameValue = listing.querySelector('.details-span-name')
-        ?.textContent as string;
-      const addressValue = listing.querySelector('.details-span-address')
-        ?.textContent as string;
-      const chair = listing.querySelector('#chair') as HTMLSelectElement;
-      const wifi = listing.querySelector('#wifi') as HTMLSelectElement;
-      const temp = listing.querySelector('#temp') as HTMLSelectElement;
-
       const editedListing: Favorites = {
-        photo: photoValue,
-        name: nameValue,
-        address: addressValue,
-        chair: chair.value,
-        wifi: wifi.value,
-        temp: temp.value,
+        ...listing,
+        chair: $chairSelect.value,
+        wifi: $wifiSelect.value,
+        temp: $tempSelect.value,
       };
+
 
       //check if listing already exist in the edited array
       if (!data.editedEntries) {
@@ -637,6 +622,7 @@ function renderDetails(listing: Favorites): HTMLElement {
         data.editedEntries.push(editedListing);
       }
 
+
       //check if listing already exist in liked array, if the heart is solid
       if ($heartIcon.className === 'fa-solid fa-heart heart-icon') {
         const duplicate = data.likedEntries.some(
@@ -651,29 +637,29 @@ function renderDetails(listing: Favorites): HTMLElement {
         }
         console.log('data.likedEntries', data.likedEntries);
       }
-      if (data.editedEntries.some((list) => list.name === listing.name)) {
-        const edited = data.editedEntries.find(
-          (list) => list.name === listing.name,
-        );
-        $chairSelect.value = edited?.chair as string;
-        $wifiSelect.value = edited?.wifi as string;
-        $tempSelect.value = edited?.temp as string;
-      } else {
-        $chairSelect.value = 'selectOne';
-        $wifiSelect.value = 'selectOne';
-        $tempSelect.value = 'selectOne';
-      }
     } else if ($editButton.textContent === 'SAVE') {
       $editButton.textContent = 'EDIT';
       $chairSelect.disabled = true;
       $wifiSelect.disabled = true;
       $tempSelect.disabled = true;
     }
-
   });
+  if (data.editedEntries.some((list) => list.name === listing.name)) {
+    const edited = data.editedEntries.find(
+      (list) => list.name === listing.name,
+    );
+    $chairSelect.value = edited?.chair as string;
+    $wifiSelect.value = edited?.wifi as string;
+    $tempSelect.value = edited?.temp as string;
+  } else {
+    $chairSelect.value = 'selectOne';
+    $wifiSelect.value = 'selectOne';
+    $tempSelect.value = 'selectOne';
+  }
 
   return $detailsContainer;
 }
+
 // render favorites page
 document.addEventListener('DOMContentLoaded', () => {
   data.likedEntries.forEach((favorite) => {
