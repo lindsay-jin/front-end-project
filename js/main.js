@@ -1,4 +1,9 @@
 "use strict";
+// interface ListingDetails {
+//   name: string;
+//   address: string;
+//   photo: string;
+// }
 // landing page
 const $startSearchButton = document.querySelector('.start-search-button');
 // search page
@@ -21,6 +26,7 @@ const $main = document.querySelector('main');
 function viewSwap(view) {
     if (view === 'landing') {
         $viewLanding?.classList.remove('hidden');
+        $main.classList.add('hidden');
         $header.classList.add('hidden');
         $form.classList.add('hidden');
         $footer.classList.add('hidden');
@@ -30,6 +36,7 @@ function viewSwap(view) {
     }
     else if (view === 'form') {
         $form.classList.remove('hidden');
+        $main.classList.remove('hidden');
         $listing.classList.remove('hidden');
         $viewLanding?.classList.add('hidden');
         $header.classList.remove('hidden');
@@ -39,6 +46,7 @@ function viewSwap(view) {
     }
     else if (view === 'details') {
         $details?.classList.remove('hidden');
+        $main.classList.remove('hidden');
         $header.classList.remove('hidden');
         $footer.classList.remove('hidden');
         $viewLanding?.classList.add('hidden');
@@ -48,6 +56,7 @@ function viewSwap(view) {
     }
     else if (view === 'favorites') {
         $favorites?.classList.remove('hidden');
+        $main.classList.remove('hidden');
         $details?.classList.add('hidden');
         $header.classList.remove('hidden');
         $footer.classList.remove('hidden');
@@ -183,19 +192,27 @@ $listing.addEventListener('click', (event) => {
         const closestElement = $eventTarget.closest('.listing-container');
         const $nameValue = closestElement?.querySelector('.span-name')
             ?.textContent;
-        const $addressValue = closestElement?.querySelector('.span-address')
-            ?.textContent;
-        const photoUrl = $eventTarget.getAttribute('src');
-        const $listingDetails = {
-            name: $nameValue,
-            address: $addressValue,
-            photo: photoUrl,
-        };
         if ($details) {
             $details.innerHTML = '';
         }
-        const detailedEntry = renderDetails($listingDetails);
-        $details?.prepend(detailedEntry);
+        const exist = data.editedEntries.some((list) => list.name === $nameValue);
+        if (exist) {
+            const listing = data.editedEntries.find((list) => list.name === $nameValue);
+            const entry = renderDetails(listing);
+            $details?.prepend(entry);
+        }
+        else {
+            const $addressValue = closestElement?.querySelector('.span-address')
+                ?.textContent;
+            const photoUrl = $eventTarget.getAttribute('src');
+            const $listingDetails = {
+                name: $nameValue,
+                address: $addressValue,
+                photo: photoUrl,
+            };
+            const detailedEntry = renderDetails($listingDetails);
+            $details?.prepend(detailedEntry);
+        }
     }
 });
 // nav bar
@@ -326,6 +343,7 @@ $details?.addEventListener('click', (event) => {
 });
 // render details
 function renderDetails(listing) {
+    console.log('listing', listing);
     const $detailsContainer = document.createElement('div');
     $detailsContainer.className = 'details-container';
     // left side
@@ -375,13 +393,14 @@ function renderDetails(listing) {
     // details-extra: chair
     const $detailsExtra = document.createElement('div');
     $detailsExtra.className = 'details-extra';
+    const $detailsForm = document.createElement('form');
     const $chairLabel = document.createElement('label');
     $chairLabel.setAttribute('for', 'chair');
     $chairLabel.textContent = 'Comfy Chair: ';
     const $chairSelect = document.createElement('select');
+    $chairSelect.disabled = true;
     $chairSelect.setAttribute('name', 'chair');
     $chairSelect.setAttribute('id', 'chair');
-    $chairSelect.disabled = true; // Disables the select element
     const $chairOptionSelectOne = document.createElement('option');
     $chairOptionSelectOne.setAttribute('value', 'selectOne');
     $chairOptionSelectOne.textContent = 'Select One';
@@ -392,8 +411,9 @@ function renderDetails(listing) {
     $chairOptionNo.setAttribute('value', 'no');
     $chairOptionNo.textContent = 'NO';
     $detailsRight.appendChild($detailsExtra);
-    $detailsExtra.appendChild($chairLabel);
-    $detailsExtra.appendChild($chairSelect);
+    $detailsExtra.appendChild($detailsForm);
+    $detailsForm.appendChild($chairLabel);
+    $detailsForm.appendChild($chairSelect);
     $chairSelect.appendChild($chairOptionSelectOne);
     $chairSelect.appendChild($chairOptionYes);
     $chairSelect.appendChild($chairOptionNo);
@@ -416,8 +436,8 @@ function renderDetails(listing) {
         $option.textContent = opt.text;
         $wifiSelect.appendChild($option);
     });
-    $detailsExtra.appendChild($wifiLabel);
-    $detailsExtra.appendChild($wifiSelect);
+    $detailsForm.appendChild($wifiLabel);
+    $detailsForm.appendChild($wifiSelect);
     // temp
     const $tempLabel = document.createElement('label');
     $tempLabel.setAttribute('for', 'temp');
@@ -441,8 +461,8 @@ function renderDetails(listing) {
     const $optionHot = document.createElement('option');
     $optionHot.value = 'hot';
     $optionHot.textContent = 'Too hot!';
-    $detailsExtra.appendChild($tempLabel);
-    $detailsExtra.appendChild($tempSelect);
+    $detailsForm.appendChild($tempLabel);
+    $detailsForm.appendChild($tempSelect);
     $tempSelect.appendChild($tempOptionSelectOne);
     $tempSelect.appendChild($optionFreezing);
     $tempSelect.appendChild($optionCool);
@@ -455,8 +475,62 @@ function renderDetails(listing) {
     $editButton.className = 'edit-button';
     $editButton.type = 'button';
     $editButton.textContent = 'EDIT';
-    $detailsExtra.appendChild($editButtonContainer);
+    $detailsForm.appendChild($editButtonContainer);
     $editButtonContainer.appendChild($editButton);
+    //edit*****************************
+    $editButton.addEventListener('click', (event) => {
+        if ($editButton.textContent === 'EDIT') {
+            $editButton.textContent = 'SAVE';
+            $chairSelect.disabled = false;
+            $wifiSelect.disabled = false;
+            $tempSelect.disabled = false;
+            const editedListing = {
+                ...listing,
+                chair: $chairSelect.value,
+                wifi: $wifiSelect.value,
+                temp: $tempSelect.value,
+            };
+            //check if listing already exist in the edited array
+            if (!data.editedEntries) {
+                data.editedEntries = [];
+            }
+            const exists = data.editedEntries.some((list) => list.name === editedListing.name);
+            if (exists) {
+                data.editedEntries = data.editedEntries.map((list) => list.name === editedListing.name ? editedListing : list);
+            }
+            else {
+                data.editedEntries.push(editedListing);
+            }
+            //check if listing already exist in liked array, if the heart is solid
+            if ($heartIcon.className === 'fa-solid fa-heart heart-icon') {
+                const duplicate = data.likedEntries.some((list) => list.name === editedListing.name);
+                if (duplicate) {
+                    data.likedEntries = data.likedEntries.map((list) => list.name === editedListing.name ? editedListing : list);
+                }
+                else {
+                    data.likedEntries.push(editedListing);
+                }
+                console.log('data.likedEntries', data.likedEntries);
+            }
+        }
+        else if ($editButton.textContent === 'SAVE') {
+            $editButton.textContent = 'EDIT';
+            $chairSelect.disabled = true;
+            $wifiSelect.disabled = true;
+            $tempSelect.disabled = true;
+        }
+    });
+    if (data.editedEntries.some((list) => list.name === listing.name)) {
+        const edited = data.editedEntries.find((list) => list.name === listing.name);
+        $chairSelect.value = edited?.chair;
+        $wifiSelect.value = edited?.wifi;
+        $tempSelect.value = edited?.temp;
+    }
+    else {
+        $chairSelect.value = 'selectOne';
+        $wifiSelect.value = 'selectOne';
+        $tempSelect.value = 'selectOne';
+    }
     return $detailsContainer;
 }
 // render favorites page

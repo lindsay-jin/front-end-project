@@ -2,6 +2,7 @@
 /* exported data */
 let data = {
     likedEntries: [],
+    editedEntries: [],
 };
 window.addEventListener('beforeunload', () => {
     const dataJSON = JSON.stringify(data);

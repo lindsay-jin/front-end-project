@@ -41,7 +41,7 @@ header {
   margin-bottom: 7px;
 }
 
-form {
+div[data-view="form"] form {
   margin: 0 1rem;
   display: flex;
   flex-wrap: wrap;
@@ -84,7 +84,7 @@ div[data-view="listing"] {
   display: flex;
   background-color: white;
   width: 100%;
-  height: 150px;
+  height: auto;
   margin: 10px 0;
 }
 
@@ -166,7 +166,7 @@ div[data-view="details"] {
   margin: 5px 0;
 }
 
-.details-extra {
+.details-extra form {
   display: flex;
   flex-direction: column;
 }
