@@ -186,14 +186,14 @@ $listing.addEventListener('click', (event) => {
     if ($eventTarget && $eventTarget.tagName === 'IMG') {
         viewSwap('details');
         const closestElement = $eventTarget.closest('.listing-container');
-        const $nameValue = closestElement?.querySelector('.span-name')?.textContent;
+        const $nameValue = closestElement?.querySelector('.span-name')
+            ?.textContent;
         if ($details) {
             $details.innerHTML = '';
         }
-        const exist = data.editedEntries.some(list => list.name === $nameValue);
+        const exist = data.editedEntries.some((list) => list.name === $nameValue);
         if (exist) {
-            const listing = data.editedEntries.find(list => list.name === $nameValue);
-            console.log('listing exist already:', listing);
+            const listing = data.editedEntries.find((list) => list.name === $nameValue);
             const entry = renderDetails(listing);
             $details?.prepend(entry);
         }
@@ -389,60 +389,6 @@ function renderDetails(listing) {
     const $detailsExtra = document.createElement('div');
     $detailsExtra.className = 'details-extra';
     const $detailsForm = document.createElement('form');
-    //edit*****************************
-    $detailsForm.addEventListener('click', (event) => {
-        event.preventDefault();
-        const $eventTarget = event.target;
-        if ($eventTarget && $eventTarget.tagName === 'BUTTON') {
-            $editButton.type = 'submit';
-            $editButton.textContent = 'SAVE';
-            $chairSelect.disabled = false;
-            $wifiSelect.disabled = false;
-            $tempSelect.disabled = false;
-            const listing = $eventTarget.closest('.details-container');
-            const photoValue = listing
-                .querySelector('.details-image')
-                ?.getAttribute('src');
-            const nameValue = listing.querySelector('.details-span-name')
-                ?.textContent;
-            const addressValue = listing.querySelector('.details-span-address')
-                ?.textContent;
-            const chair = listing.querySelector('#chair');
-            const wifi = listing.querySelector('#wifi');
-            const temp = listing.querySelector('#temp');
-            const editedListing = {
-                photo: photoValue,
-                name: nameValue,
-                address: addressValue,
-                chair: chair.value,
-                wifi: wifi.value,
-                temp: temp.value,
-            };
-            //check if listing already exist in the edited array
-            if (!data.editedEntries) {
-                data.editedEntries = [];
-            }
-            const exists = data.editedEntries.some((list) => list.name === editedListing.name);
-            if (exists) {
-                data.editedEntries = data.editedEntries.map((list) => list.name === editedListing.name ? editedListing : list);
-            }
-            else {
-                data.editedEntries.push(editedListing);
-            }
-            console.log('data.editedEntries', data.editedEntries);
-            //check if listing already exist in liked array, if the heart is solid
-            if ($heartIcon.className === 'fa-solid fa-heart heart-icon') {
-                const duplicate = data.likedEntries.some((list) => list.name === editedListing.name);
-                if (duplicate) {
-                    data.likedEntries = data.likedEntries.map((list) => list.name === editedListing.name ? editedListing : list);
-                }
-                else {
-                    data.likedEntries.push(editedListing);
-                }
-                console.log('data.likedEntries', data.likedEntries);
-            }
-        }
-    });
     const $chairLabel = document.createElement('label');
     $chairLabel.setAttribute('for', 'chair');
     $chairLabel.textContent = 'Comfy Chair: ';
@@ -466,18 +412,6 @@ function renderDetails(listing) {
     $chairSelect.appendChild($chairOptionSelectOne);
     $chairSelect.appendChild($chairOptionYes);
     $chairSelect.appendChild($chairOptionNo);
-    if (data.editedEntries.some(list => list.name === listing.name)) {
-        const edited = data.editedEntries.find((list) => list.name === listing.name);
-        if (edited && edited.chair) {
-            $chairSelect.value = edited.chair;
-        }
-        else {
-            $chairSelect.value = 'selectOne';
-        }
-    }
-    else {
-        $chairSelect.value = 'selectOne';
-    }
     // wifi
     const $wifiLabel = document.createElement('label');
     $wifiLabel.setAttribute('for', 'wifi');
@@ -538,6 +472,73 @@ function renderDetails(listing) {
     $editButton.textContent = 'EDIT';
     $detailsForm.appendChild($editButtonContainer);
     $editButtonContainer.appendChild($editButton);
+    //edit*****************************
+    $editButton.addEventListener('click', (event) => {
+        if ($editButton.textContent === 'EDIT') {
+            $editButton.textContent = 'SAVE';
+            $chairSelect.disabled = false;
+            $wifiSelect.disabled = false;
+            $tempSelect.disabled = false;
+            const listing = document.querySelector('.details-container');
+            const photoValue = listing
+                .querySelector('.details-image')
+                ?.getAttribute('src');
+            const nameValue = listing.querySelector('.details-span-name')
+                ?.textContent;
+            const addressValue = listing.querySelector('.details-span-address')
+                ?.textContent;
+            const chair = listing.querySelector('#chair');
+            const wifi = listing.querySelector('#wifi');
+            const temp = listing.querySelector('#temp');
+            const editedListing = {
+                photo: photoValue,
+                name: nameValue,
+                address: addressValue,
+                chair: chair.value,
+                wifi: wifi.value,
+                temp: temp.value,
+            };
+            //check if listing already exist in the edited array
+            if (!data.editedEntries) {
+                data.editedEntries = [];
+            }
+            const exists = data.editedEntries.some((list) => list.name === editedListing.name);
+            if (exists) {
+                data.editedEntries = data.editedEntries.map((list) => list.name === editedListing.name ? editedListing : list);
+            }
+            else {
+                data.editedEntries.push(editedListing);
+            }
+            //check if listing already exist in liked array, if the heart is solid
+            if ($heartIcon.className === 'fa-solid fa-heart heart-icon') {
+                const duplicate = data.likedEntries.some((list) => list.name === editedListing.name);
+                if (duplicate) {
+                    data.likedEntries = data.likedEntries.map((list) => list.name === editedListing.name ? editedListing : list);
+                }
+                else {
+                    data.likedEntries.push(editedListing);
+                }
+                console.log('data.likedEntries', data.likedEntries);
+            }
+            if (data.editedEntries.some((list) => list.name === listing.name)) {
+                const edited = data.editedEntries.find((list) => list.name === listing.name);
+                $chairSelect.value = edited?.chair;
+                $wifiSelect.value = edited?.wifi;
+                $tempSelect.value = edited?.temp;
+            }
+            else {
+                $chairSelect.value = 'selectOne';
+                $wifiSelect.value = 'selectOne';
+                $tempSelect.value = 'selectOne';
+            }
+        }
+        else if ($editButton.textContent === 'SAVE') {
+            $editButton.textContent = 'EDIT';
+            $chairSelect.disabled = true;
+            $wifiSelect.disabled = true;
+            $tempSelect.disabled = true;
+        }
+    });
     return $detailsContainer;
 }
 // render favorites page
